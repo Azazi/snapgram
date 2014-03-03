@@ -1,0 +1,15 @@
+{
+  "name": "snapgram",
+  "version": "0.0.0",
+  "description": "snapgram",
+  "main": "app.js",
+  "author": {
+    "name": "Azazi",
+    "email": ""
+  },
+  "dependencies": {
+    "express": "3.4.4",
+    "jade": "*",
+    "stylus": "*"
+  }
+}
