@@ -30,7 +30,22 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
-app.get('/users', user.list);
+app.get('/feed', routes.index);
+
+//app.get('/users', user.list);
+app.get('/users/new', user.new);
+app.post('/users/create', user.create);
+app.get('/users/:id', user.show);
+app.get('/users/:id/follow', user.follow);
+app.get('/users/:id/unfollow', user.unfollow);
+
+app.get('/sessions/new', session.new);
+app.post('/sessions/create', session.create);
+
+app.get('/photos/new', photo.new);
+app.post('/photos/create', photo.create);
+app.get('/photos/thumbnail/:id.:ext', photo.showThumbnail);
+app.get('/photos/:id.:ext', photo.show);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
