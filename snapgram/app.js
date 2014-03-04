@@ -7,6 +7,8 @@ var mysql = require('mysql');
 var express = require('express');
 var routes = require('./routes');
 var user = require('./routes/user');
+var session = require('./routes/session');
+var photo = require('./routes/photo');
 var http = require('http');
 var path = require('path');
 
@@ -81,7 +83,7 @@ app.configure(function(){
 app.get('/', routes.index);
 app.get('/feed', routes.index);
 
-//app.get('/users', user.list);
+app.get('/users', user.list);
 app.get('/users/new', user.new);
 app.post('/users/create', user.create);
 app.get('/users/:id', user.show);
