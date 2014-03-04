@@ -15,10 +15,10 @@ exports.create = function(req, res){
     res.send("respond with a resource");
 };
 
-exports.new = function(req, res){
+exports.show = function(req, res){
     res.send("respond with a resource");
 };
 
-exports.new = function(req, res){
+exports.showThumbnail = function(req, res){
     res.send("respond with a resource");
 };

@@ -50,7 +50,7 @@ var queries = ['DROP TABLE IF EXISTS Users, Photos, Follows, Streams',
                'CREATE TABLE IF NOT EXISTS Photos (photo_id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT, caption VARCHAR(200), time_stamp DATETIME, owner_id INT UNSIGNED) ENGINE=INNODB;',
                'CREATE TABLE IF NOT EXISTS Follows (follower_id INT UNSIGNED, followee_id INT UNSIGNED) ENGINE=INNODB;',
                'CREATE TABLE IF NOT EXISTS Streams (stream_id INT UNSIGNED, photo_id BIGINT UNSIGNED) ENGINE=INNODB;'] 
-queries.forEach(function (queryString){
+queries.forEach(function(queryString){
     conn.query(queryString, function (err, rows, fields){
         if(err) throw err;
         else console.log('query successful\t' + new Date());
