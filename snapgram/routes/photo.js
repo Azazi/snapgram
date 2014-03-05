@@ -1,7 +1,7 @@
 /**
  * Created by ASE Lab on 03/03/14.
  */
-//var gm = require('gm');
+var gm = require('gm');
 //var gm = require('gm').subClass({ imageMagick: true });
 var fs = require('fs');
 var imageDirectory = 'images/';
@@ -75,12 +75,17 @@ exports.showThumbnail = function(req, res){
     var id = req.params.id;
     var ext = req.params.ext;
     var img = imageDirectory + id + "." + ext;
-    gm(img)
+    gm(img).resize(thumbnailSize).stream(function streamOut (err, stdout, stderr) {
 
-        .stream(function (err, stdout, stderr) {
+        if(err){
+            res.send('something went wrong. err ' + err.message, 200);
+            return;
+        }
+        if(stderr){
             //res.send('something went wrong. stderr ' + stderr, 200);
             //return;
             console.log(stderr);
+        }
         switch(ext)
         {
             case 'gif':
@@ -105,7 +110,7 @@ exports.showThumbnail = function(req, res){
         var piping = stdout.pipe(res);
 
         piping.on('finish', function(){
-                res.end();
-            })
-        });
+            res.end();
+        })
+    });
 }
