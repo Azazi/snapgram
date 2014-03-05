@@ -18,6 +18,6 @@
 	"mysql":"*",
     "underscore":"*",
     "crypto":"*",
-	"gm"
+	"gm": "*"
   }
 }
