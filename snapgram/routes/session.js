@@ -34,6 +34,7 @@ exports.create = function(conn){
                         console.log("Entered password is: " + crypto.createHash('md5').update(req.body.password).digest('hex'));
                         if(user.password == crypto.createHash('md5').update(req.body.password).digest('hex')){
                             console.log("...password matches!")
+                            req.session.user_id = req.body.username;
                             login = true;
                         }
                     }
@@ -61,6 +62,7 @@ exports.create = function(conn){
 };
 
 exports.end = function(req, res){
+    delete req.sessions.user_id;
     req.session = null; //effectively logs out
     res.redirect('/'); //redirect to index?
 }

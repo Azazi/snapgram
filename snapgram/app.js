@@ -102,7 +102,7 @@ app.get('/users/:id/unfollow', user.unfollow);
 app.get('/sessions/new', session.new);
 app.post('/sessions/create', session.create(conn));
 
-app.get('/photos/new', photo.new);
+app.get('/photos/new', checkAuth, photo.new);
 app.post('/photos/create', photo.create);
 app.get('/photos/thumbnail/:id.:ext', photo.showThumbnail);
 app.get('/photos/:id.:ext', photo.show);
