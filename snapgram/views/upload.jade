@@ -1,0 +1,9 @@
+//
+   Created by Takoyaki on 3/5/14.
+
+extends layout
+block content
+    form(action="/photos/create", method="post", enctype="multipart/form-data")
+        input(type="text", name="title")
+        input(type="file", multiple, name="image")
+        button(type="submit", value="Upload") Upload File

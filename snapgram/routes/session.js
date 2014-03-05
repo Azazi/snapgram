@@ -62,5 +62,5 @@ exports.create = function(conn){
 
 exports.end = function(req, res){
     req.session = null; //effectively logs out
-    res.sendfile('./'); //redirect to index? probably not doing this right...
+    res.redirect('/'); //redirect to index?
 }

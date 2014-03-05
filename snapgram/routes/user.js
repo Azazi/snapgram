@@ -48,6 +48,7 @@ exports.create = function(conn){
                         if(err) throw err;
                         else console.log('query successful\t' + new Date());
                     });
+                    res.cookie.username = req.body.username;
                     res.cookie("sid", hash).send('<p>Cookie Set: <a href="/users/1">View Here</a></p>');
 
                     conn.query("SELECT sid FROM Users WHERE user_name = '" + req.body.username + "'", function (err, sids, fields){

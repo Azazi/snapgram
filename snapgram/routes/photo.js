@@ -6,15 +6,32 @@ var gm = require('gm');
 var fs = require('fs');
 var imageDirectory = 'images/';
 var thumbnailSize = 400;
+var util = require('util');
 
 //app.get('/photos/new', photo.new);
 exports.new = function(req, res){
-    res.send("respond with a resource");
+    res.render('upload', {
+        title: 'Upload Images'
+    });
 };
 
 //app.post('/photos/create', photo.create);
 exports.create = function(req, res){
-    res.send("respond with a resource");
+    console.log('file info: ',req.files.image);
+
+    //split the url into an array and then get the last chunk and render it out in the send req.
+    var pathArray = req.files.image.path.split( '\\' );
+
+    res.send(util.format(' Task Complete \n uploaded %s (%d Kb) to %s as %s'
+        , req.files.image.name
+        , req.files.image.size / 1024 | 0
+        , req.files.image.path
+        , req.body.title
+        , req.files.image
+        , '<img src="uploads/' + pathArray[(pathArray.length - 1)] + '">'
+    ));
+
+    fs.rename(req.files.image.path, req.files.image.path.replace(pathArray[pathArray.length-1], req.files.image.name));
 };
 
 //app.get('/photos/:id.:ext', photo.show);
