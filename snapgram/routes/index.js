@@ -10,17 +10,18 @@ exports.index = function(conn){
             else{
                 console.log('SID updated for\t' + req.body.username + "\t" + new Date());
                 console.log(results);
-                console.log(results[0].user_name);
                 if(results.length > 0){
                     res.render('index', {
                         title: 'Express',
+                        logged_in: true,
                         sid: req.cookies.sid,
                         user_name: results[0].user_name
                     });
                 }
                 else{
                     res.render('index', {
-                        title: 'Express'
+                        title: 'Express',
+                        logged_in: false
                     })
                 }
             }

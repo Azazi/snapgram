@@ -4,7 +4,7 @@ block content
   h1= title
 
   p Welcome to #{title}
-  p #{sid}
-  -if(sid){
-      p hi
+  -if(logged_in){
+      p #{sid}
+      p Hello, #{user_name}!
   -}
