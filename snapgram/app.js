@@ -11,6 +11,7 @@ var session = require('./routes/session');
 var photo = require('./routes/photo');
 var http = require('http');
 var path = require('path');
+var crypto = require('crypto');
 
 var conn = mysql.createConnection({
   host: 'web2.cpsc.ucalgary.ca',
@@ -30,9 +31,11 @@ app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
-app.use(app.router);
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.cookieParser());
+app.use(express.session({secret: 'SENG513'}));
+app.use(app.router);
 
 // development only
 if ('development' == app.get('env')) {
@@ -42,16 +45,21 @@ if ('development' == app.get('env')) {
 
 /// Open an maintain a connection to the database. Do not forget to always close 
 /// the connection afterwards. 
-conn.connect();
+//conn.connect();
 
 /// This is a call to the function that creates the database schema. It is called
 /// first when the program starts, drops all tables in the database and re-create 
 /// them again.
 var queries = ['DROP TABLE IF EXISTS Users, Photos, Follows, Streams', 
-               'CREATE TABLE IF NOT EXISTS Users (user_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, user_name VARCHAR(35), first_name VARCHAR(35), last_name VARCHAR(35), password CHAR(128), followers_count INT UNSIGNED, photo_count INT UNSIGNED, gender CHAR(1), dob DATE, profile_image BIGINT UNSIGNED, feed_id INT UNSIGNED, stream_id INT UNSIGNED) ENGINE=INNODB;',
+               'CREATE TABLE IF NOT EXISTS Users (user_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, user_name VARCHAR(35), first_name VARCHAR(35), last_name VARCHAR(35), password CHAR(128), followers_count INT UNSIGNED, photo_count INT UNSIGNED, gender CHAR(1), dob DATE, profile_image BIGINT UNSIGNED, feed_id INT UNSIGNED, stream_id INT UNSIGNED, sid VARCHAR(35)) ENGINE=INNODB;',
                'CREATE TABLE IF NOT EXISTS Photos (photo_id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT, caption VARCHAR(200), time_stamp DATETIME, owner_id INT UNSIGNED) ENGINE=INNODB;',
                'CREATE TABLE IF NOT EXISTS Follows (follower_id INT UNSIGNED, followee_id INT UNSIGNED) ENGINE=INNODB;',
-               'CREATE TABLE IF NOT EXISTS Streams (stream_id INT UNSIGNED, photo_id BIGINT UNSIGNED) ENGINE=INNODB;'] 
+               'CREATE TABLE IF NOT EXISTS Streams (stream_id INT UNSIGNED, photo_id BIGINT UNSIGNED) ENGINE=INNODB;',
+    "INSERT INTO Users (user_name, first_name, last_name, password) VALUES ('username1', 'John', 'Doe', '" + crypto.createHash('md5').update('password1').digest('hex') + "');",
+    "INSERT INTO Users (user_name, first_name, last_name, password) VALUES ('username2', 'Chong-Wei', 'Lee', '" + crypto.createHash('md5').update('password2').digest('hex') + "');",
+    "INSERT INTO Users (user_name, first_name, last_name, password) VALUES ('username3', 'Dan', 'Lin', '" + crypto.createHash('md5').update('password3').digest('hex') + "');",
+    "INSERT INTO Users (user_name, first_name, last_name, password) VALUES ('username4', 'Yun Lei', 'Zhao', '" + crypto.createHash('md5').update('password4').digest('hex') + "');",
+    "INSERT INTO Users (user_name, first_name, last_name, password) VALUES ('username5', 'Yong Dae', 'Lee', '" + crypto.createHash('md5').update('password5').digest('hex') + "');"]
 queries.forEach(function(queryString){
     conn.query(queryString, function (err, rows, fields){
         if(err) throw err;
@@ -60,7 +68,7 @@ queries.forEach(function(queryString){
 });
 
 /// Close the connection after creating the tables
-conn.end();
+//conn.end();
 
 // all environments
 app.configure(function(){
@@ -85,13 +93,13 @@ app.get('/feed', routes.index);
 
 app.get('/users', user.list);
 app.get('/users/new', user.new);
-app.post('/users/create', user.create);
+app.post('/users/create', user.create(conn));
 app.get('/users/:id', user.show);
 app.get('/users/:id/follow', user.follow);
 app.get('/users/:id/unfollow', user.unfollow);
 
 app.get('/sessions/new', session.new);
-app.post('/sessions/create', session.create);
+app.post('/sessions/create', session.create(conn));
 
 app.get('/photos/new', photo.new);
 app.post('/photos/create', photo.create);
