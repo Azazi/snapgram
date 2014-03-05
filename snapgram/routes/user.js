@@ -20,6 +20,14 @@ exports.create = function(conn){
             function(err,usernames,fields){
                 if(err){
                     console.log(err);
+
+                    /// This code handles the 500 Error. It should probably be called when the 
+                    /// server encounters an error and not here. I am not sure if it is even 
+                    /// going to be triggered from here! Again, refactoring work left for later.
+                    app.use(function (err, req, res, next){
+                            res.send('500: Internal Server Error', 500);
+                    });
+
                     return;
                 }
                 _.each(usernames, function(user){

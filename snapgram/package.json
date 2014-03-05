@@ -17,6 +17,7 @@
     "stylus": "*",
 	"mysql":"*",
     "underscore":"*",
-    "crypto":"*"
+    "crypto":"*",
+	"gm"
   }
 }
