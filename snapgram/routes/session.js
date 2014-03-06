@@ -6,7 +6,10 @@ var _ = require('underscore');
  */
 
 exports.new = function(req, res){
-    res.sendfile('./public/loginform.html');
+	res.render('login', {
+		title: 'Login to Snapgram'
+    });
+	//res.sendfile('./public/loginform.html');
 };
 
 exports.create = function(conn){

@@ -1,9 +1,57 @@
-//
-   Created by Takoyaki on 3/5/14.
-
 extends layout
 block content
-    form(action="/photos/create", method="post", enctype="multipart/form-data")
-        input(type="text", name="title")
-        input(type="file", multiple, name="image")
-        button(type="submit", value="Upload") Upload File
+
+	.container--fluid
+		.row-fluid
+			.col-lg-2.col(style='padding-top: 20px; padding-left:20px;')
+				ul.nav.nav-pills.nav-stacked(style='max-width: 200px;background-color:#4b792e')
+					li
+						h2 Menu
+					li.active
+						a(href='/')
+							| Home
+					li
+						a(href='#')
+							| #{user_name}								
+					li
+						a(href='/photos/new')
+							| Upload Photo							
+					li
+						a(href='#')
+							| Friends
+							span.badge 25
+					li
+						a(href='#')
+							| Followers
+							span.badge 13
+					li
+						a(href='#')
+							| Sign out	
+					li
+						a(href='#')
+							| About	
+					li
+						a(href='#')
+							| Help	
+			.col-lg-8.col-lg-offset-2(style='padding-top: 300px;')
+				h1 Upload an image to Snapgram
+				p
+					| Upload your favorite pictures and share them with your close ones, all in one convenient and fun place!		
+				.row
+					.col-lg-2
+						span.help-block
+						| Snapgram is an evolutionary way of sharing day to day moments with the least amount of effort and the most fun... Just like Facebook, Instagram and Snapchat! 
+					.col-lg-6
+						form.form-horizontal(action='/photos/create', method='post', enctype='multipart/form-data')
+							fieldset
+								.form-group
+									.col-lg-12
+										textarea#title.form-control(rows='1', name='title', placeholder='image caption')
+										span.help-block
+										| Tag your image with a memorable or maybe funny caption!
+								.form-group
+									.col-lg-12
+										input#image.form-control(type='file', multiple, placeholder='image', name='image')
+								.form-group
+									.col-lg-12
+										button.btn.btn-primary(type='submit') Submit

@@ -78,14 +78,20 @@ app.configure(function(){
     /// maybe isolate it in a separate module or somewhere else in the code where 
     /// it makes most sense. 
     app.use(function (req, res, next){
-        res.send('404: Page Not Found', 404);
+        res.render('error', {
+            title: '404 | Page Not Found',
+            code: 404
+        })
     });
 
     /// This code handles the 500 Error. It should probably be called when the 
     /// server encounters an error and not here. I am not sure if it is even 
     /// going to be triggered from here! Again, refactoring work left for later.
     app.use(function (err, req, res, next){
-            res.send('500: Internal Server Error', 500);
+        res.render('error', {
+            title: '500 | Internal Server Error',
+            code: 500
+        })
     });
 });
 

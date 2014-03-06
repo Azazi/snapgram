@@ -9,7 +9,9 @@ exports.list = function(req, res){
 };
 
 exports.new = function(req, res){
-        res.sendfile('./public/registrationform.html');
+    res.render('register', {
+        title: 'Join Snapgram'
+    });
 };
 
 exports.create = function(conn){

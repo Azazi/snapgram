@@ -1,14 +1,65 @@
 extends layout
 
 block content
-  h1= title
-
-  p Welcome to #{title}
-  -if(logged_in){
-      p #{sid}
-      p Hello, #{user_name}!
-  -}
-  -else{
-      p Login <a href ="/sessions/new">here</a>!
-      p Not registered? <a href ="/users/new">Sign up now!</a>!
-  -}
+	-if(logged_in){
+		.container--fluid
+			.row-fluid
+				.col-lg-2.col(style='padding-top: 20px; padding-left:20px;')
+					ul.nav.nav-pills.nav-stacked(style='max-width: 200px;background-color:#4b792e')
+						li
+							h2 Menu
+						li.active
+							a(href='/')
+								| Home
+						li
+							a(href='#')
+								| #{user_name}
+						li
+							a(href='/photos/new')
+								| Upload Photo									
+						li
+							a(href='#')
+								| Friends
+								span.badge 25
+						li
+							a(href='#')
+								| Followers
+								span.badge 13
+						li
+							a(href='#')
+								| Sign out	
+						li
+							a(href='#')
+								| About	
+						li
+							a(href='#')
+								| Help									
+		p #{sid}
+	-}
+	-else{
+		.container--fluid
+			.row-fluid
+				.col-lg-2.col(style='padding-top: 20px; padding-left:20px;')
+					ul.nav.nav-pills.nav-stacked(style='max-width: 200px;background-color:#4b792e')
+						li
+							h2 Menu
+						li.active
+							a(href='/')
+								| Home
+						li
+							a(href='#')
+								| About	
+						li
+							a(href='#')
+								| Help								
+				.col-lg-8.col-lg-offset-2(style='padding-top: 300px;')
+					h1 Snapgram
+					p.lead Because sharing... is caring!
+					blockquote
+						p Course project for SENG 513, Web-based Systems, Fall 2014.
+						p Department of Computer Science, University of Calgary
+						small By Alaa Azazi & Edwin Chan 					
+					p.bs-component
+						a(href='/users/new').btn.btn-primary Join Snapgram »
+						a(href='/sessions/new').btn.btn-primary Sign In »
+	-}

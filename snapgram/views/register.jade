@@ -1,0 +1,52 @@
+extends layout
+block content
+
+	.container--fluid
+		.row-fluid
+			.col-lg-2.col(style='padding-top: 20px; padding-left:20px;')
+				ul.nav.nav-pills.nav-stacked(style='max-width: 200px;background-color:#4b792e')
+					li
+						h2 Menu
+					li.active
+						a(href='/')
+							| Home
+					li
+						a(href='#')
+							| About	
+					li
+						a(href='#')
+							| Help
+			.col-lg-8.col-lg-offset-2(style='padding-top: 300px;')
+				h1 Join Snapgram
+				.row
+					.col-lg-2
+						span.help-block
+						| Snapgram is an evolutionary way of sharing day to day moments with the least amount of effort and the most fun... Just like Facebook, Instagram and Snapchat! 
+					.col-lg-6.col
+						form.form-horizontal(action='/users/create', method='post', enctype='multipart/form-data')
+							.form-group
+								.col-lg-4
+									.row
+										span.help-block
+										| FIRST NAME
+										input#firstname.form-control(type='text', name="firstname", placeholder='Teddy')				
+								.col-lg-4.col-lg-offset-1
+									.row
+										span.help-block
+										| LAST NAME
+										input#lastname.form-control(type='text', name='lastname', placeholder='someone')								
+							.form-group
+								.col-lg-4
+									.row
+										span.help-block
+										| USERNAME
+										input#username.form-control(type='text', name='username', placeholder='someone')
+								.col-lg-4.col-lg-offset-1
+									.row
+										span.help-block
+										| PASSWORD					
+										input#inputPassword.form-control(type='password', name='password', placeholder='password')							
+							.form-group
+								.col-lg-4.col-lg-offset-5
+									.row
+										button.btn.btn-primary(type='submit') Create Account				

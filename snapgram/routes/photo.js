@@ -42,10 +42,16 @@ exports.show = function(req, res){
     fs.readFile(imageDirectory + id + "." + ext, function(err, data){
         if(err){
             if(err.code === 'ENOENT'){
-                res.send('404: Page Not Found', 404);
+                res.render('error', {
+                    title: '404 | Page Not Found',
+                    code: 404
+                })
                 return;
             } else{
-                res.send('500: Internal Server Error', 500);
+                res.render('error', {
+                    title: '500 | Internal Server Error',
+                    code: 500
+                })
                 return;
             }
         }
