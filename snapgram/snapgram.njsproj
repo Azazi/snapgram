@@ -1400,6 +1400,14 @@
     <Content Include="public\loginform.html" />
     <Content Include="public\registrationform.html" />
     <Content Include="public\snapgram.png" />
+    <Content Include="public\stylesheets\css\bootstrap %28old%29.css" />
+    <Content Include="public\stylesheets\css\bootstrap-responsive.css" />
+    <Content Include="public\stylesheets\css\bootstrap-responsive.min.css" />
+    <Content Include="public\stylesheets\css\bootstrap-theme.css" />
+    <Content Include="public\stylesheets\css\bootstrap-theme.min.css" />
+    <Content Include="public\stylesheets\css\bootstrap.css" />
+    <Content Include="public\stylesheets\css\bootstrap.min.css" />
+    <Content Include="public\stylesheets\style.css" />
     <Content Include="public\stylesheets\style.styl" />
     <Content Include="README.md" />
     <Content Include="views\error.jade" />
@@ -1683,6 +1691,7 @@
     <Folder Include="public\images\" />
     <Folder Include="public\javascripts\" />
     <Folder Include="public\stylesheets\" />
+    <Folder Include="public\stylesheets\css\" />
     <Folder Include="routes\" />
     <Folder Include="views\" />
   </ItemGroup>
