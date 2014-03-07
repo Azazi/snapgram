@@ -74,20 +74,30 @@ exports.addPhotoToTable = function(req, res, next){
 
 exports.addPhotoToTableShared = function(req, res, next){
     req.upload_time = (new Date()/1);
-    req.conn.query("SELECT caption, photo_path, owner_id FROM Photos WHERE photo_id = '" + req.params.pid + "'", function (err, results, fields){
-        console.log("INTERMEDIATE STEP");
-        console.log(results);
-
-        req.conn.query("INSERT INTO Photos (caption, time_stamp, owner_id, photo_path, original_owner) VALUES ('" + results[0].caption + "', '" + req.upload_time + "', '" + req.user_id + "', '" + results[0].photo_path + "', '" + results[0].owner_id + "')", function (err, results, fields){
-            if(err) throw err;
-            else{
-                req.conn.query("SELECT * FROM Photos", function(err, results){
-                    console.log(results)
-                })
-                console.log("updated Streams table")
-                next();
-            }
-        });
+    req.conn.query("SELECT caption, photo_path, owner_id, original_owner FROM Photos WHERE photo_id = '" + req.params.pid + "'", function (err, results, fields){
+        if(results[0].original_owner != null){
+            req.conn.query("INSERT INTO Photos (caption, time_stamp, owner_id, photo_path, original_owner) VALUES ('" + results[0].caption + "', '" + req.upload_time + "', '" + req.user_id + "', '" + results[0].photo_path + "', '" + results[0].original_owner + "')", function (err, results, fields){
+                if(err) throw err;
+                else{
+                    req.conn.query("SELECT * FROM Photos", function(err, results){
+                        console.log(results)
+                    })
+                    console.log("updated Streams table")
+                    next();
+                }
+            });
+        }
+        else{
+            req.conn.query("INSERT INTO Photos (caption, time_stamp, owner_id, photo_path, original_owner) VALUES ('" + results[0].caption + "', '" + req.upload_time + "', '" + req.user_id + "', '" + results[0].photo_path + "', '" + results[0].owner_id + "')", function (err, results, fields){
+                if(err) throw err;
+                else{
+                    req.conn.query("SELECT * FROM Photos", function(err, results){
+                        console.log(results)
+                    })
+                    next();
+                }
+            });
+        }
     })
 }
 
@@ -122,7 +132,7 @@ exports.insertPhotoPathToTable = function(req, res, next){
         if(err) throw err;
         else{
             console.log("path is: " + req.photo_path);
-            console.log("successfully added path to photo");
+            console.log("end of insertPhotoToTable");
             next();
         }
     });
@@ -132,10 +142,26 @@ exports.populateStreamTable = function(req, res, next){
     req.conn.query("INSERT INTO Streams (stream_id, photo_id) SELECT follower_id, '" + req.photo_id + "' FROM Follows WHERE followee_id = '" + req.user_id + "'", function (err, results, fields){
         if(err) throw err;
         else{
-            console.log("updated Streams table")
+            console.log("end of populateStreamTable")
             next();
         }
     });
+}
+
+exports.populateStreamTableShared = function(req, res, next){
+    req.conn.query("SELECT b.stream_id, b.photo_id FROM Follows a, Streams b, Photos c WHERE a.followee_id = '" + req.user_id + "' AND b.stream_id = a.follower_id AND b.photo_id = c.photo_id", function(err, results){
+        if(err) throw err;
+        else{
+            console.log("Crazy abc select:");
+            console.log(results);
+            results.forEach(function(result){
+                req.conn.query("DELETE FROM Streams WHERE stream_id = '" + result.stream_id + "' AND photo_id = '" + result.photo_id + "'", function(err, results){
+                    if(err) throw err;
+                })
+            })
+            next();
+        }
+    })
 }
 
 //app.post('/photos/create', photo.create);
@@ -143,7 +169,7 @@ exports.create = function(req, res){
     req.conn.query("SELECT * FROM Streams", function (err, results, fields){
         if(err) throw err;
         else{
-            console.log("STREAMS:");
+            console.log("STREAMS TABLE:");
             console.log(results);
         }
     });

@@ -158,7 +158,7 @@ app.get('/photos/new', checkAuth, photo.new);
 app.post('/photos/create', checkAuth, appendConn, photo.getUserIDFromSID, photo.addPhotoToTable, photo.getPhotoID, photo.insertPhotoPathToTable, photo.populateStreamTable, photo.create);
 app.get('/photos/thumbnail/:id.:ext', checkAuth,  photo.showThumbnail);
 app.get('/photos/:id.:ext', checkAuth, photo.show);
-app.get('/photos/share/:pid', checkAuth, appendConn, photo.getUserIDFromSID, photo.addPhotoToTableShared, photo.getPhotoID, photo.populateStreamTable, routes.index);
+app.get('/photos/share/:pid', checkAuth, appendConn, photo.getUserIDFromSID, photo.addPhotoToTableShared, photo.getPhotoID, photo.populateStreamTableShared, photo.populateStreamTable, routes.index);
 
 function checkAuth(req, res, next) {
     conn.query("SELECT * FROM Users WHERE sid = '" + req.cookies.sid + "'", function (err, sids, fields){
