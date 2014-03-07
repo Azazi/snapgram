@@ -93,11 +93,22 @@ exports.follow = function(req, res){
     req.conn.query("SELECT user_id FROM Users WHERE sid = '" + req.cookies.sid + "'", function (err, user_ids, fields){
         if(err) throw err;
         else{
-            req.conn.query("INSERT INTO Follows (follower_id, followee_id) VALUES ('" + user_ids[0].user_id + "', '" + req.params.id + "');", function (err, results, fields){
+            req.conn.query("SELECT * FROM Follows WHERE follower_id = '" + user_ids[0].user_id + "' AND followee_id = '" + req.params.id + "'", function (err, follows_results, fields){
                 if(err) throw err;
                 else{
-                    console.log(user_ids[0].user_id + " is now following " + req.params.id);
-                    res.redirect('/');
+                    if(follows_results.length > 0){
+                        //do nothing, relationship already exists
+                        res.redirect('/');
+                    }
+                    else{
+                        req.conn.query("INSERT INTO Follows (follower_id, followee_id) VALUES ('" + user_ids[0].user_id + "', '" + req.params.id + "');", function (err, results, fields){
+                            if(err) throw err;
+                            else{
+                                console.log(user_ids[0].user_id + " is now following " + req.params.id);
+                                res.redirect('/');
+                            }
+                        });
+                    }
                 }
             });
         }
@@ -108,11 +119,22 @@ exports.unfollow = function(req, res){
     req.conn.query("SELECT user_id FROM Users WHERE sid = '" + req.cookies.sid + "'", function (err, user_ids, fields){
         if(err) throw err;
         else{
-            req.conn.query("DELETE FROM Follows WHERE follower_id = '" + user_ids[0].user_id + "' and followee_id = '" + req.params.id + "'", function (err, results, fields){
+            req.conn.query("SELECT * FROM Follows WHERE follower_id = '" + user_ids[0].user_id + "' AND followee_id = '" + req.params.id + "'", function (err, follows_results, fields){
                 if(err) throw err;
                 else{
-                    console.log(user_ids[0].user_id + " has unfollowed " + req.params.id);
-                    res.redirect('/');
+                    if(follows_results.length <= 0){
+                        //do nothing, relationship never existed!
+                        res.redirect('/');
+                    }
+                    else{
+                        req.conn.query("DELETE FROM Follows WHERE follower_id = '" + user_ids[0].user_id + "' and followee_id = '" + req.params.id + "'", function (err, results, fields){
+                            if(err) throw err;
+                            else{
+                                console.log(user_ids[0].user_id + " has unfollowed " + req.params.id);
+                                res.redirect('/');
+                            }
+                        });
+                    }
                 }
             });
         }

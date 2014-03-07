@@ -8,6 +8,7 @@ var express = require('express');
 var routes = require('./routes');
 var user = require('./routes/user');
 var session = require('./routes/session');
+var bulk = require('./routes/bulk');
 var photo = require('./routes/photo');
 var http = require('http');
 var path = require('path');
@@ -159,6 +160,13 @@ app.post('/photos/create', checkAuth, appendConn, photo.getUserIDFromSID, photo.
 app.get('/photos/thumbnail/:id.:ext', checkAuth,  photo.showThumbnail);
 app.get('/photos/:id.:ext', checkAuth, photo.show);
 app.get('/photos/share/:pid', checkAuth, appendConn, photo.getUserIDFromSID, photo.addPhotoToTableShared, photo.getPhotoID, photo.populateStreamTableShared, photo.populateStreamTable, routes.index);
+
+app.get('/bulk/clear', appendConn, bulk.clear);
+app.post('/bulk/users', appendConn, bulk.users);
+app.post('/bulk/streams', appendConn, bulk.streams);
+app.get('/bulk/testusers', appendConn, bulk.testUsers);
+app.get('/bulk/testphotos', appendConn, bulk.testPhotos);
+app.get('/bulk/show', appendConn, bulk.logEverything);
 
 function checkAuth(req, res, next) {
     conn.query("SELECT * FROM Users WHERE sid = '" + req.cookies.sid + "'", function (err, sids, fields){
