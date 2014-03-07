@@ -30,15 +30,7 @@ exports.create = function(req, res){
             function(err,usernames,fields){
                 if(err){
                     console.log(err);
-
-                    /// This code handles the 500 Error. It should probably be called when the
-                    /// server encounters an error and not here. I am not sure if it is even
-                    /// going to be triggered from here! Again, refactoring work left for later.
-                    app.use(function (err, req, res, next){
-                            res.send('500: Internal Server Error', 500);
-                    });
-
-                    return;
+                    sendInternalServerError(req, res);
                 }
                 _.each(usernames, function(user){
                     console.log(user.user_name);
@@ -55,17 +47,23 @@ exports.create = function(req, res){
                     var hash = crypto.createHash('md5').update(new Date() + req.body.username).digest('hex');
                     req.conn.query("INSERT INTO Users (user_name, name, password, sid) " +
                         "VALUES ('" + req.body.username + "', '" + req.body.name + "', '" + crypto.createHash('md5').update(req.body.password.toString()).digest('hex') + "', '" + hash + "')", function (err, rows, fields){
-                        if(err) throw err;
+                        if(err){
+                            sendInternalServerError(req, res);
+                        }
                         else console.log('query successful\t' + new Date());
                     });
                     req.session.user_id = req.body.username;
                     res.cookie("sid", hash).redirect("/");
 
                     req.conn.query("SELECT user_id FROM Users WHERE user_name = '" + req.body.username + "'", function (err, user_ids, fields){
-                        if(err) throw err;
+                        if(err){
+                            sendInternalServerError(req, res);
+                        }
                         else{
                             req.conn.query("INSERT INTO Follows (follower_id, followee_id) VALUES ('" + user_ids[0] + "', '" + user_ids[0].user_id + "');", function (err, results, fields){
-                                if(err) throw err;
+                                if(err){
+                                    sendInternalServerError(req, res);
+                                }
                             });
                         }
                     });
@@ -77,7 +75,9 @@ exports.create = function(req, res){
 
 exports.show = function(req, res){
     req.conn.query("SELECT * FROM Users WHERE user_id = '" + req.params.id + "'", function (err, results, fields){
-        if(err) throw err;
+        if(err){
+            sendInternalServerError(req, res);
+        }
         else{
             if(results.length == 0){
                 res.send("User does not exist.");
@@ -87,7 +87,9 @@ exports.show = function(req, res){
     });
     console.log("USER DOES EXIST");
     req.conn.query("SELECT * FROM Photos WHERE owner_id = '" + req.params.id + "'", function (err, photos, fields){
-        if(err) throw err;
+        if(err){
+            sendInternalServerError(req, res);
+        }
         else{
             console.log(photos);
             res.send(photos);
@@ -98,10 +100,14 @@ exports.show = function(req, res){
 
 exports.follow = function(req, res){
     req.conn.query("SELECT user_id FROM Users WHERE sid = '" + req.cookies.sid + "'", function (err, user_ids, fields){
-        if(err) throw err;
+        if(err){
+            sendInternalServerError(req, res);
+        }
         else{
             req.conn.query("SELECT * FROM Follows WHERE follower_id = '" + user_ids[0].user_id + "' AND followee_id = '" + req.params.id + "'", function (err, follows_results, fields){
-                if(err) throw err;
+                if(err){
+                    sendInternalServerError(req, res);
+                }
                 else{
                     if(follows_results.length > 0){
                         //do nothing, relationship already exists
@@ -109,7 +115,9 @@ exports.follow = function(req, res){
                     }
                     else{
                         req.conn.query("INSERT INTO Follows (follower_id, followee_id) VALUES ('" + user_ids[0].user_id + "', '" + req.params.id + "');", function (err, results, fields){
-                            if(err) throw err;
+                            if(err){
+                                sendInternalServerError(req, res);
+                            }
                             else{
                                 console.log(user_ids[0].user_id + " is now following " + req.params.id);
                                 res.redirect('/');
@@ -124,10 +132,14 @@ exports.follow = function(req, res){
 
 exports.unfollow = function(req, res){
     req.conn.query("SELECT user_id FROM Users WHERE sid = '" + req.cookies.sid + "'", function (err, user_ids, fields){
-        if(err) throw err;
+        if(err){
+            sendInternalServerError(req, res);
+        }
         else{
             req.conn.query("SELECT * FROM Follows WHERE follower_id = '" + user_ids[0].user_id + "' AND followee_id = '" + req.params.id + "'", function (err, follows_results, fields){
-                if(err) throw err;
+                if(err){
+                    sendInternalServerError(req, res);
+                }
                 else{
                     if(follows_results.length <= 0){
                         //do nothing, relationship never existed!
@@ -135,7 +147,9 @@ exports.unfollow = function(req, res){
                     }
                     else{
                         req.conn.query("DELETE FROM Follows WHERE follower_id = '" + user_ids[0].user_id + "' and followee_id = '" + req.params.id + "'", function (err, results, fields){
-                            if(err) throw err;
+                            if(err){
+                                sendInternalServerError(req, res);
+                            }
                             else{
                                 console.log(user_ids[0].user_id + " has unfollowed " + req.params.id);
                                 res.redirect('/');
@@ -147,3 +161,26 @@ exports.unfollow = function(req, res){
         }
     });
 };
+
+function sendInternalServerError(req, res){
+    // Reply with ERROR 500
+    res.status(500);
+    // respond with html page
+    if (req.accepts('html')) {
+    res.render('error', {
+        title: '500 | Internal Server Error',
+        code: 500
+    });
+    return;
+    }
+
+    // respond with json
+    if (req.accepts('json')) {
+        res.send({ error: 'Internal Server Error' });
+        return;
+    }
+
+    // default to plain-text. send()
+    res.type('txt').send('Internal Server Error');
+    return;
+}

@@ -24,27 +24,7 @@ exports.create = function(req, res){
         function(err,usernames,fields){
             if(err){
                 console.log(err);
-
-                // Reply with ERROR 500
-                res.status(500);
-                // respond with html page
-                if (req.accepts('html')) {
-                res.render('error', {
-                    title: '500 | Internal Server Error',
-                    code: 500
-                });
-                return;
-                }
-
-                // respond with json
-                if (req.accepts('json')) {
-                    res.send({ error: 'Not found' });
-                    return;
-                }
-
-                // default to plain-text. send()
-                res.type('txt').send('Not found');
-                return;
+                sendInternalServerError(req, res);
             }
             console.log(usernames)
             _.each(usernames, function(user){
@@ -65,26 +45,7 @@ exports.create = function(req, res){
                 var hash = crypto.createHash('md5').update(new Date() + req.body.username).digest('hex');
                 req.conn.query("UPDATE Users SET sid = '" + hash + "' WHERE user_name = '" + req.body.username + "'", function (err, rows, fields){
                     if(err){
-                        // Reply with ERROR 500
-                        res.status(500);
-                        // respond with html page
-                        if (req.accepts('html')) {
-                        res.render('error', {
-                            title: '500 | Internal Server Error',
-                            code: 500
-                        });
-                        return;
-                        }
-
-                        // respond with json
-                        if (req.accepts('json')) {
-                            res.send({ error: 'Not found' });
-                            return;
-                        }
-
-                        // default to plain-text. send()
-                        res.type('txt').send('Not found');
-                        return;
+                        sendInternalServerError(req, res);
                     }
                     else console.log('SID updated for\t' + req.body.username + "\t" + new Date());
                 });
@@ -98,26 +59,7 @@ exports.create = function(req, res){
 
                 req.conn.query("SELECT sid FROM Users WHERE user_name = '" + req.body.username + "'", function (err, sids, fields){
                     if(err){
-                        // Reply with ERROR 500
-                        res.status(500);
-                        // respond with html page
-                        if (req.accepts('html')) {
-                        res.render('error', {
-                            title: '500 | Internal Server Error',
-                            code: 500
-                        });
-                        return;
-                        }
-
-                        // respond with json
-                        if (req.accepts('json')) {
-                            res.send({ error: 'Not found' });
-                            return;
-                        }
-
-                        // default to plain-text. send()
-                        res.type('txt').send('Not found');
-                        return;
+                        sendInternalServerError(req, res);
                     }
                     else console.log(sids);
                 });
@@ -135,4 +77,27 @@ exports.create = function(req, res){
 
 exports.end = function(req, res){
     res.cookie("sid", 0).redirect('/');
+}
+
+function sendInternalServerError(req, res){
+    // Reply with ERROR 500
+    res.status(500);
+    // respond with html page
+    if (req.accepts('html')) {
+    res.render('error', {
+        title: '500 | Internal Server Error',
+        code: 500
+    });
+    return;
+    }
+
+    // respond with json
+    if (req.accepts('json')) {
+        res.send({ error: 'Internal Server Error' });
+        return;
+    }
+
+    // default to plain-text. send()
+    res.type('txt').send('Internal Server Error');
+    return;
 }

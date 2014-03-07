@@ -819,6 +819,7 @@
     <Compile Include="node_modules\stylus\node_modules\sax\test\xmlns-xml-default-redefine.js" />
     <Compile Include="node_modules\underscore\underscore-min.js" />
     <Compile Include="node_modules\underscore\underscore.js" />
+    <Compile Include="routes\bulk.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="routes\photo.js" />
     <Compile Include="routes\session.js" />
@@ -1397,8 +1398,6 @@
     <Content Include="node_modules\underscore\package.json" />
     <Content Include="node_modules\underscore\README.md" />
     <Content Include="package.json" />
-    <Content Include="public\loginform.html" />
-    <Content Include="public\registrationform.html" />
     <Content Include="public\snapgram.png" />
     <Content Include="public\stylesheets\css\bootstrap %28old%29.css" />
     <Content Include="public\stylesheets\css\bootstrap-responsive.css" />
