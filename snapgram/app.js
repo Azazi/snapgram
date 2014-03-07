@@ -24,7 +24,7 @@ var conn = mysql.createConnection({
 var app = express();
 
 // all environments
-app.set('port', process.env.PORT || 3000);
+app.set('port', 8550);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(express.favicon());
@@ -119,25 +119,7 @@ app.configure(function(){
     /// server encounters an error and not here. I am not sure if it is even 
     /// going to be triggered from here! Again, refactoring work left for later.
     app.use(function(req, res, next){
-        res.status(500);
-
-        // respond with html page
-        if (req.accepts('html')) {
-        res.render('error', {
-            title: '500 | Internal Server Error',
-            code: 500
-        });
-        return;
-        }
-
-        // respond with json
-        if (req.accepts('json')) {
-            res.send({ error: 'Not found' });
-            return;
-        }
-
-        // default to plain-text. send()
-        res.type('txt').send('Not found');
+        sendInternalServerError(req, res);
     });
 });
 
@@ -170,7 +152,9 @@ app.get('/bulk/show', appendConn, bulk.logEverything);
 
 function checkAuth(req, res, next) {
     conn.query("SELECT * FROM Users WHERE sid = '" + req.cookies.sid + "'", function (err, sids, fields){
-        if(err) throw err;
+        if(err){
+            sendInternalServerError(req, res);
+        }
         else{
             if(sids.length <= 0){
                 /// redirect the user to the login page, including the address of 
@@ -186,18 +170,26 @@ function checkAuth(req, res, next) {
 }
 
 function checkAuthInverse(req, res, next) {
-    conn.query("SELECT * FROM Users WHERE sid = '" + req.cookies.sid + "'", function (err, sids, fields){
-        if(err) throw err;
-        else{
-            if(sids.length > 0){
-                //logged in already
-                res.redirect('/',302);
+    if(req.cookies.sid){
+        conn.query("SELECT * FROM Users WHERE sid = '" + req.cookies.sid + "'", function (err, sids, fields){
+            if(err){
+                sendInternalServerError(req, res);
             }
             else{
-                next();
+                if(sids.length > 0){
+                    //logged in already
+                    res.redirect('/',302);
+                }
+                else{
+                    next();
+                }
             }
-        }
-    });
+        });
+    }
+    else{
+        next();
+    }
+
 }
 
 function appendConn(req, res, next) {
@@ -208,3 +200,26 @@ function appendConn(req, res, next) {
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
+
+function sendInternalServerError(req, res){
+    // Reply with ERROR 500
+    res.status(500);
+    // respond with html page
+    if (req.accepts('html')) {
+    res.render('error', {
+        title: '500 | Internal Server Error',
+        code: 500
+    });
+    return;
+    }
+
+    // respond with json
+    if (req.accepts('json')) {
+        res.send({ error: 'Internal Server Error' });
+        return;
+    }
+
+    // default to plain-text. send()
+    res.type('txt').send('Internal Server Error');
+    return;
+}

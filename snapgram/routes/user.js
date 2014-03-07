@@ -2,6 +2,7 @@ var _ = require('underscore');
 var crypto = require('crypto');
 
 exports.new = function(req, res){
+    res.status(200);
     res.render('register', {
         title: 'Join Snapgram'
     });
@@ -41,7 +42,12 @@ exports.create = function(req, res){
                 })
 
                 if(exists){
-                    res.send("Username already exists, please select another username");
+                    var errorMsg = 'username already exists';
+                    res.status(302);
+                    res.render('register', {
+                        title: 'Join Snapgram',
+                        error: errorMsg
+                    });
                 }
                 else{
                     var hash = crypto.createHash('md5').update(new Date() + req.body.username).digest('hex');
@@ -53,7 +59,7 @@ exports.create = function(req, res){
                         else console.log('query successful\t' + new Date());
                     });
                     req.session.user_id = req.body.username;
-                    res.cookie("sid", hash).redirect("/");
+                    res.cookie("sid", hash).redirect("/feed", 302); 
 
                     req.conn.query("SELECT user_id FROM Users WHERE user_name = '" + req.body.username + "'", function (err, user_ids, fields){
                         if(err){
@@ -80,8 +86,7 @@ exports.show = function(req, res){
         }
         else{
             if(results.length == 0){
-                res.send("User does not exist.");
-                return;
+                sendNotFoundError(req,res);
             }
         }
     });
@@ -182,5 +187,28 @@ function sendInternalServerError(req, res){
 
     // default to plain-text. send()
     res.type('txt').send('Internal Server Error');
+    return;
+}
+
+function sendNotFoundError(req,res){
+    // Reply with ERROR 404
+    res.status(404);
+    // respond with html page
+    if (req.accepts('html')) {
+        res.render('error', {
+            title: '404 | Page Not Found',
+            code: 404
+        });
+        return;
+    }
+
+    // respond with json
+    if (req.accepts('json')) {
+        res.send({ error: 'Not found' });
+        return;
+    }
+
+    // default to plain-text. send()
+    res.type('txt').send('Not found');
     return;
 }
