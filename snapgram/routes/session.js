@@ -7,7 +7,8 @@ var _ = require('underscore');
 
 exports.new = function(req, res){
 	res.render('login', {
-		title: 'Login to Snapgram'
+		title: 'Login to Snapgram',
+        redir: req.query.redir
     });
 	//res.sendfile('./public/loginform.html');
 };
@@ -47,7 +48,12 @@ exports.create = function(req, res){
                     if(err) throw err;
                     else console.log('SID updated for\t' + req.body.username + "\t" + new Date());
                 });
-                res.cookie("sid", hash).send('<p>Cookie Set: <a href="/users/1">View Here</a></p>');
+                if(req.body.redir != ''){
+                    res.cookie("sid", hash).redirect(req.body.redir);
+                }
+                else{
+                    res.cookie("sid", hash).redirect('/');
+                }
 
                 req.conn.query("SELECT sid FROM Users WHERE user_name = '" + req.body.username + "'", function (err, sids, fields){
                     if(err) throw err;
@@ -55,7 +61,11 @@ exports.create = function(req, res){
                 });
             }
             else{
-                res.send("Invalid username or password!");
+                res.render('login', {
+		            title: 'Login to Snapgram',
+                    redir: req.body.redir,
+                    failed: 'true'
+                });
             }
         }
     );

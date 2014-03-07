@@ -164,11 +164,10 @@ function checkAuth(req, res, next) {
         if(err) throw err;
         else{
             if(sids.length <= 0){
-                //res.send('You are not authorized to view this page');
-                res.render('login', {
-                    title: 'Express',
-                    error: "You must be logged in to view this page."
-                });
+                /// redirect the user to the login page, including the address of 
+                /// of the page they were attempting to view in order to redirect 
+                /// to it after successful login
+                res.redirect('/sessions/new?redir='+req.url, 302);
             }
             else{
                 next();

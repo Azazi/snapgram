@@ -2,6 +2,9 @@ extends layout
 block content
 	.container--fluid
 		.row-fluid
+			-if(failed == 'true'){
+				p Enter something 
+			-}
 			.col-lg-8.col-lg-offset-2(style='padding-top: 300px;')
 				h1 Sign in to Snapgram
 				p
@@ -26,4 +29,10 @@ block content
 										input#inputPassword.form-control(type='password', name='password', placeholder='password')
 								.form-group
 									.col-lg-10
+										-if(redir){
+											input#hiddeninput.form-control(type='hidden', name='redir', value='#{redir}')
+										-}
+										-else{
+											input#hiddeninput.form-control(type='hidden', name='redir', value='')
+										-}
 										button.btn.btn-primary(type='submit') Submit				
