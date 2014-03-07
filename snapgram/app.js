@@ -92,21 +92,51 @@ app.configure(function(){
     /// This code handles the 404 Error. We might want to refactor this later and 
     /// maybe isolate it in a separate module or somewhere else in the code where 
     /// it makes most sense. 
-    app.use(function (req, res, next){
-        res.render('error', {
-            title: '404 | Page Not Found',
-            code: 404
-        })
+    app.use(function(req, res, next){
+        res.status(404);
+
+        // respond with html page
+        if (req.accepts('html')) {
+            res.render('error', {
+                title: '404 | Page Not Found',
+                code: 404
+            });
+            return;
+        }
+
+        // respond with json
+        if (req.accepts('json')) {
+            res.send({ error: 'Not found' });
+            return;
+        }
+
+        // default to plain-text. send()
+        res.type('txt').send('Not found');
     });
 
     /// This code handles the 500 Error. It should probably be called when the 
     /// server encounters an error and not here. I am not sure if it is even 
     /// going to be triggered from here! Again, refactoring work left for later.
-    app.use(function (err, req, res, next){
+    app.use(function(req, res, next){
+        res.status(500);
+
+        // respond with html page
+        if (req.accepts('html')) {
         res.render('error', {
             title: '500 | Internal Server Error',
             code: 500
-        })
+        });
+        return;
+        }
+
+        // respond with json
+        if (req.accepts('json')) {
+            res.send({ error: 'Not found' });
+            return;
+        }
+
+        // default to plain-text. send()
+        res.type('txt').send('Not found');
     });
 });
 

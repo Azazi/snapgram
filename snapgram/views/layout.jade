@@ -5,5 +5,55 @@ html
 		title= title
 		link(rel='stylesheet', href='/stylesheets/css/bootstrap.min.css')
 	body
-	
+		-if(logged_in){
+			.container--fluid
+				.row-fluid
+					.col-lg-2.col(style='padding-top: 20px; padding-left:20px;')
+						ul.nav.nav-pills.nav-stacked(style='max-width: 200px;background-color:#4b792e')
+							li
+								h2 Menu
+							li.active
+								a(href='/')
+									| Home
+							li
+								a(href='#')
+									| #{user_name}
+							li
+								a(href='/photos/new')
+									| Upload Photo									
+							li
+								a(href='#')
+									| Friends
+									//span.badge 25
+							li
+								a(href='#')
+									| Followers
+									//span.badge 13
+							li
+								a(href='/sessions/end')
+									| Sign out	
+							li
+								a(href='#')
+									| About	
+							li
+								a(href='#')
+									| Help									
+		-}
+		-else{
+			.container--fluid
+				.row-fluid
+					.col-lg-2.col(style='padding-top: 20px; padding-left:20px;')
+						ul.nav.nav-pills.nav-stacked(style='max-width: 200px;background-color:#4b792e')
+							li
+								h2 Menu
+							li.active
+								a(href='/')
+									| Home
+							li
+								a(href='#')
+									| About	
+							li
+								a(href='#')
+									| Help	
+		-}											
 		block content

@@ -3,44 +3,14 @@ block content
 
 	.container--fluid
 		.row-fluid
-			.col-lg-2.col(style='padding-top: 20px; padding-left:20px;')
-				ul.nav.nav-pills.nav-stacked(style='max-width: 200px;background-color:#4b792e')
-					li
-						h2 Menu
-					li.active
-						a(href='/')
-							| Home
-					li
-						a(href='#')
-							| #{user_name}								
-					li
-						a(href='/photos/new')
-							| Upload Photo							
-					li
-						a(href='#')
-							| Friends
-							span.badge 25
-					li
-						a(href='#')
-							| Followers
-							span.badge 13
-					li
-						a(href='#')
-							| Sign out	
-					li
-						a(href='#')
-							| About	
-					li
-						a(href='#')
-							| Help	
 			.col-lg-8.col-lg-offset-2(style='padding-top: 300px;')
 				h1 Upload an image to Snapgram
 				p
-					| Upload your favorite pictures and share them with your close ones, all in one convenient and fun place!		
+					| Upload your favorite pictures and share them with your close ones, all in one convenient and fun place!
 				.row
 					.col-lg-2
 						span.help-block
-						| Snapgram is an evolutionary way of sharing day to day moments with the least amount of effort and the most fun... Just like Facebook, Instagram and Snapchat! 
+						| Snapgram is an evolutionary way of sharing day to day moments with the least amount of effort and the most fun... Just like Facebook, Instagram and Snapchat!
 					.col-lg-6
 						form.form-horizontal(action='/photos/create', method='post', enctype='multipart/form-data')
 							fieldset

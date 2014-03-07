@@ -2,25 +2,17 @@ extends layout
 block content
 	.container--fluid
 		.row-fluid
-			.col-lg-2.col(style='padding-top: 20px; padding-left:20px;')
-				ul.nav.nav-pills.nav-stacked(style='max-width: 200px;background-color:#4b792e')
-					li
-						h2 Menu
-					li.active
-						a(href='/')
-							| Home
-					li
-						a(href='#')
-							| About	
-					li
-						a(href='#')
-							| Help	
 			.col-lg-8.col-lg-offset-2(style='padding-top: 300px;')
 				h1 #{title}
 				p
-					| This link appears to be broken. If you believe this should not have happened, please 
-					a(href='/users/new') contact us
-					| .		
+					-if(code == 404){
+						| This link appears to be broken. If you believe this should not have happened, please 
+						a(href='#') contact us
+						| .
+					-}
+					-else{
+						| Our server has encountered an unexpected problem. Don't worry, we're working on solving it as hard as we can.
+					-}
 					.row
 						.col-lg-6.col
 							.col-lg-10

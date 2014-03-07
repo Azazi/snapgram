@@ -1414,7 +1414,6 @@
     <Content Include="views\index.jade" />
     <Content Include="views\layout.jade" />
     <Content Include="views\login.jade" />
-    <Content Include="views\loginform.html" />
     <Content Include="views\register.jade" />
     <Content Include="views\upload.jade" />
   </ItemGroup>

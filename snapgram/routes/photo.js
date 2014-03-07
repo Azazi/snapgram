@@ -11,7 +11,8 @@ var util = require('util');
 //app.get('/photos/new', photo.new);
 exports.new = function(req, res){
     res.render('upload', {
-        title: 'Upload Images'
+        title: 'Upload Images',
+        logged_in: true
     });
 };
 
