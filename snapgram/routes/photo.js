@@ -56,6 +56,7 @@ exports.addPhotoToTable = function(req, res, next){
                 if(err) throw err;
                 else{
                     console.log("successfully added photo to Photos TABLE");
+                    console.log(results);
                     next();
                 }
             });
@@ -69,6 +70,25 @@ exports.addPhotoToTable = function(req, res, next){
             });            
         }
     }
+}
+
+exports.addPhotoToTableShared = function(req, res, next){
+    req.upload_time = (new Date()/1);
+    req.conn.query("SELECT caption, photo_path, owner_id FROM Photos WHERE photo_id = '" + req.params.pid + "'", function (err, results, fields){
+        console.log("INTERMEDIATE STEP");
+        console.log(results);
+
+        req.conn.query("INSERT INTO Photos (caption, time_stamp, owner_id, photo_path, original_owner) VALUES ('" + results[0].caption + "', '" + req.upload_time + "', '" + req.user_id + "', '" + results[0].photo_path + "', '" + results[0].owner_id + "')", function (err, results, fields){
+            if(err) throw err;
+            else{
+                req.conn.query("SELECT * FROM Photos", function(err, results){
+                    console.log(results)
+                })
+                console.log("updated Streams table")
+                next();
+            }
+        });
+    })
 }
 
 exports.getPhotoID = function(req, res, next){

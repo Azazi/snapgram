@@ -53,9 +53,9 @@ if ('development' == app.get('env')) {
 /// them again.
 var queries = ['DROP TABLE IF EXISTS Users, Photos, Follows, Streams', 
                'CREATE TABLE IF NOT EXISTS Users (user_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, user_name VARCHAR(35), name VARCHAR(70), password CHAR(128), followers_count INT UNSIGNED, photo_count INT UNSIGNED, gender CHAR(1), dob DATE, profile_image BIGINT UNSIGNED, feed_id INT UNSIGNED, stream_id INT UNSIGNED, sid VARCHAR(35)) ENGINE=INNODB;',
-               'CREATE TABLE IF NOT EXISTS Photos (photo_id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT, caption VARCHAR(200), time_stamp BIGINT UNSIGNED, owner_id INT UNSIGNED, photo_path VARCHAR(200)) ENGINE=INNODB;',
+               'CREATE TABLE IF NOT EXISTS Photos (photo_id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT, caption VARCHAR(200), time_stamp BIGINT UNSIGNED, owner_id INT UNSIGNED, photo_path VARCHAR(200), original_owner BIGINT UNSIGNED) ENGINE=INNODB;',
                'CREATE TABLE IF NOT EXISTS Follows (follower_id INT UNSIGNED, followee_id INT UNSIGNED) ENGINE=INNODB;',
-               'CREATE TABLE IF NOT EXISTS Streams (stream_id INT UNSIGNED, photo_id BIGINT UNSIGNED, photo_path VARCHAR(200)) ENGINE=INNODB;',
+               'CREATE TABLE IF NOT EXISTS Streams (stream_id INT UNSIGNED, photo_id BIGINT UNSIGNED) ENGINE=INNODB;',
     "INSERT INTO Users (user_name, name, password) VALUES ('username1', 'John Doe', '" + crypto.createHash('md5').update('password1').digest('hex') + "');",
     "INSERT INTO Users (user_name, name, password) VALUES ('username2', 'Chong-Wei Lee', '" + crypto.createHash('md5').update('password2').digest('hex') + "');",
     "INSERT INTO Users (user_name, name, password) VALUES ('username3', 'Dan Lin', '" + crypto.createHash('md5').update('password3').digest('hex') + "');",
@@ -158,6 +158,7 @@ app.get('/photos/new', checkAuth, photo.new);
 app.post('/photos/create', checkAuth, appendConn, photo.getUserIDFromSID, photo.addPhotoToTable, photo.getPhotoID, photo.insertPhotoPathToTable, photo.populateStreamTable, photo.create);
 app.get('/photos/thumbnail/:id.:ext', checkAuth,  photo.showThumbnail);
 app.get('/photos/:id.:ext', checkAuth, photo.show);
+app.get('/photos/share/:pid', checkAuth, appendConn, photo.getUserIDFromSID, photo.addPhotoToTableShared, photo.getPhotoID, photo.populateStreamTable, routes.index);
 
 function checkAuth(req, res, next) {
     conn.query("SELECT * FROM Users WHERE sid = '" + req.cookies.sid + "'", function (err, sids, fields){
