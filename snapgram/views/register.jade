@@ -3,8 +3,11 @@ block content
 
 	.container--fluid
 		.row-fluid
-			-if(error == 'input error'){
-				p ERROR
+			-if(error){
+				.alert.alert-dismissable.alert-danger
+					button.close(type='button', data-dismiss='alert')
+					strong Invalid input!
+					a.alert-link(href='#')  #{error}
 			-}
 			.col-lg-8.col-lg-offset-2(style='padding-top: 300px;')
 				h1 Join Snapgram
