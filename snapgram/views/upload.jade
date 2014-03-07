@@ -2,6 +2,12 @@ extends layout
 block content
 
 	.container--fluid
+		-if(error == 'wrong input'){
+			p ERROR
+		-}
+		-else if (error == 'not image'){
+			p NOT IMAGE
+		-}
 		.row-fluid
 			.col-lg-8.col-lg-offset-2(style='padding-top: 300px;')
 				h1 Upload an image to Snapgram

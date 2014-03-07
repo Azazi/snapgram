@@ -36,14 +36,39 @@ exports.getUserIDFromSID = function(req, res, next){
 }
 
 exports.addPhotoToTable = function(req, res, next){
-    req.upload_time = (new Date()/1);
-    req.conn.query("INSERT INTO Photos (time_stamp, owner_id, caption) VALUES ('" + req.upload_time + "', '" + req.user_id + "', '" + req.body.title + "')", function (err, results, fields){
-        if(err) throw err;
-        else{
-            console.log("successfully added photo to Photos TABLE");
-            next();
+    var file = req.files.image;
+    if(file.size === 0) { 
+        fs.unlinkSync(file.path);
+        res.status(302);
+        res.render('upload', {
+            title: 'Upload Images',
+            logged_in: true,
+            error: 'wrong input'
+        });
+    }
+    else{
+        var nameArray = req.files.image.name.split('.');
+        var ext = nameArray[nameArray.length - 1];
+
+        if(ext === 'jpg' || ext === 'jpeg' || ext === 'gif' || ext === 'bmp' || ext === 'png'){
+            req.upload_time = (new Date()/1);
+            req.conn.query("INSERT INTO Photos (time_stamp, owner_id, caption) VALUES ('" + req.upload_time + "', '" + req.user_id + "', '" + req.body.title + "')", function (err, results, fields){
+                if(err) throw err;
+                else{
+                    console.log("successfully added photo to Photos TABLE");
+                    next();
+                }
+            });
         }
-    });
+        else{
+            res.status(302);
+            res.render('upload', {
+                title: 'Upload Images',
+                logged_in: true,
+                error: 'not image'
+            });            
+        }
+    }
 }
 
 exports.getPhotoID = function(req, res, next){
@@ -105,17 +130,9 @@ exports.create = function(req, res){
 
     //split the url into an array and then get the last chunk and render it out in the send req.
     var pathArray = req.files.image.path.split( '\\' );
-
-    res.send(util.format(' Task Complete \n uploaded %s (%d Kb) to %s as %s'
-        , req.files.image.name
-        , req.files.image.size / 1024 | 0
-        , req.files.image.path
-        , req.body.title
-        , req.files.image
-        , '<img src="uploads/' + pathArray[(pathArray.length - 1)] + '">'
-    ));
-
     fs.rename(req.files.image.path, req.files.image.path.replace(pathArray[pathArray.length-1], req.photo_path));
+    res.status(200);
+    res.redirect('/photos/'+req.photo_path);
 };
 
 //app.get('/photos/:id.:ext', photo.show);
@@ -126,16 +143,44 @@ exports.show = function(req, res){
     fs.readFile(imageDirectory + id + "." + ext, function(err, data){
         if(err){
             if(err.code === 'ENOENT'){
-                res.render('error', {
-                    title: '404 | Page Not Found',
-                    code: 404
-                })
+                res.status(404);
+                // respond with html page
+                if (req.accepts('html')) {
+                    res.render('error', {
+                        title: '404 | Page Not Found',
+                        code: 404
+                    });
+                    return;
+                }
+
+                // respond with json
+                if (req.accepts('json')) {
+                    res.send({ error: 'Not found' });
+                    return;
+                }
+
+                // default to plain-text. send()
+                res.type('txt').send('Not found');
                 return;
             } else{
+                res.status(500);
+                // respond with html page
+                if (req.accepts('html')) {
                 res.render('error', {
                     title: '500 | Internal Server Error',
                     code: 500
-                })
+                });
+                return;
+                }
+
+                // respond with json
+                if (req.accepts('json')) {
+                    res.send({ error: 'Not found' });
+                    return;
+                }
+
+                // default to plain-text. send()
+                res.type('txt').send('Not found');
                 return;
             }
         }
@@ -182,42 +227,81 @@ exports.showThumbnail = function(req, res){
     var id = req.params.id;
     var ext = req.params.ext;
     var img = imageDirectory + id + "." + ext;
-    gm(img).resize(thumbnailSize).stream(function streamOut (err, stdout, stderr) {
 
+    fs.readFile(imageDirectory + id + "." + ext, function(err, data){
         if(err){
-            res.send('something went wrong. err ' + err.message, 200);
-            return;
-        }
-        if(stderr){
-            //res.send('something went wrong. stderr ' + stderr, 200);
-            //return;
-            console.log(stderr);
-        }
-        switch(ext)
-        {
-            case 'gif':
-                res.writeHead(200, {'Content-Type':'image/gif'});
-                break;
-            case 'jpg':
-                res.writeHead(200, {'Content-Type':'image/jpg'});
-                break;
-            case 'jpeg':
-                res.writeHead(200, {'Content-Type':'image/jpeg'});
-                break;
-            case 'png':
-                res.writeHead(200, {'Content-Type':'image/png'});
-                break;
-            case 'bmp':
-                res.writeHead(200, {'Content-Type':'image/bmp'});
-                break;
-            default:
-                console.log("Image type may not be supported.");
-                res.writeHead(200, {'Content-Type':'image/jpg'});
-        }
-        var piping = stdout.pipe(res);
+            if(err.code === 'ENOENT'){
+                res.status(404);
+                // respond with html page
+                if (req.accepts('html')) {
+                    res.render('error', {
+                        title: '404 | Page Not Found',
+                        code: 404
+                    });
+                    return;
+                }
 
-        piping.on('finish', function(){
-            res.end();
-        })
+                // respond with json
+                if (req.accepts('json')) {
+                    res.send({ error: 'Not found' });
+                    return;
+                }
+
+                // default to plain-text. send()
+                res.type('txt').send('Not found');
+                return;
+            } else{
+                res.status(500);
+                // respond with html page
+                if (req.accepts('html')) {
+                res.render('error', {
+                    title: '500 | Internal Server Error',
+                    code: 500
+                });
+                return;
+                }
+
+                // respond with json
+                if (req.accepts('json')) {
+                    res.send({ error: 'Not found' });
+                    return;
+                }
+
+                // default to plain-text. send()
+                res.type('txt').send('Not found');
+                return;
+            }
+        }        
+
+        else{
+            gm(img).resize(thumbnailSize).stream(function streamOut (err, stdout, stderr) {
+                switch(ext)
+                {
+                    case 'gif':
+                        res.writeHead(200, {'Content-Type':'image/gif'});
+                        break;
+                    case 'jpg':
+                        res.writeHead(200, {'Content-Type':'image/jpg'});
+                        break;
+                    case 'jpeg':
+                        res.writeHead(200, {'Content-Type':'image/jpeg'});
+                        break;
+                    case 'png':
+                        res.writeHead(200, {'Content-Type':'image/png'});
+                        break;
+                    case 'bmp':
+                        res.writeHead(200, {'Content-Type':'image/bmp'});
+                        break;
+                    default:
+                        console.log("Image type may not be supported.");
+                        res.writeHead(200, {'Content-Type':'image/jpg'});
+                }
+                var piping = stdout.pipe(res);
+
+                piping.on('finish', function(){
+                    res.end();
+                })
+            });
+        }
     });
 }
