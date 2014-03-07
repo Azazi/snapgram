@@ -3,7 +3,10 @@ block content
 	.container--fluid
 		.row-fluid
 			-if(failed == 'true'){
-				p Enter something 
+				.alert.alert-dismissable.alert-danger
+					button.close(type='button', data-dismiss='alert')
+					strong Invalid input!
+					a.alert-link(href='#')  Invalid username or password
 			-}
 			.col-lg-8.col-lg-offset-2(style='padding-top: 300px;')
 				h1 Sign in to Snapgram
@@ -20,12 +23,12 @@ block content
 								.form-group
 									.col-lg-10
 										span.help-block
-										| EMAIL OR USERNAME
+										| USERNAME
 										input#username.form-control(type='text', name='username' placeholder='someone')
 								.form-group
 									.col-lg-10
 										span.help-block
-										| PASSWORD					
+										| PASSWORD
 										input#inputPassword.form-control(type='password', name='password', placeholder='password')
 								.form-group
 									.col-lg-10

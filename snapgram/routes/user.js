@@ -11,10 +11,17 @@ exports.create = function(req, res){
     var exists = false;
 
     if(req.body.username === '' || req.body.password === '' || req.body.name === ''){
+        var errorMsg;
+        if(req.body.username === '')
+            errorMsg = "username cannot be empty";
+        else if(req.body.password === '')
+            errorMsg = "password cannot be empty";
+        else
+            errorMsg = "name cannot be empty";
         res.status(302);
         res.render('register', {
             title: 'Join Snapgram',
-            error: 'input error'
+            error: errorMsg
         });
     }
     else{

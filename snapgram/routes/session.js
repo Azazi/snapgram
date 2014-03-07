@@ -10,7 +10,6 @@ exports.new = function(req, res){
 		title: 'Login to Snapgram',
         redir: req.query.redir
     });
-	//res.sendfile('./public/loginform.html');
 };
 
 exports.create = function(req, res){
@@ -19,12 +18,32 @@ exports.create = function(req, res){
     console.log("Username is: " + username);
     console.log("Password is: " + password);
     var login = false;
-    ////////////////////////////
+
     req.conn.query(
         'SELECT * FROM Users;',
         function(err,usernames,fields){
             if(err){
                 console.log(err);
+
+                // Reply with ERROR 500
+                res.status(500);
+                // respond with html page
+                if (req.accepts('html')) {
+                res.render('error', {
+                    title: '500 | Internal Server Error',
+                    code: 500
+                });
+                return;
+                }
+
+                // respond with json
+                if (req.accepts('json')) {
+                    res.send({ error: 'Not found' });
+                    return;
+                }
+
+                // default to plain-text. send()
+                res.type('txt').send('Not found');
                 return;
             }
             console.log(usernames)
@@ -45,9 +64,31 @@ exports.create = function(req, res){
             if(login){
                 var hash = crypto.createHash('md5').update(new Date() + req.body.username).digest('hex');
                 req.conn.query("UPDATE Users SET sid = '" + hash + "' WHERE user_name = '" + req.body.username + "'", function (err, rows, fields){
-                    if(err) throw err;
+                    if(err){
+                        // Reply with ERROR 500
+                        res.status(500);
+                        // respond with html page
+                        if (req.accepts('html')) {
+                        res.render('error', {
+                            title: '500 | Internal Server Error',
+                            code: 500
+                        });
+                        return;
+                        }
+
+                        // respond with json
+                        if (req.accepts('json')) {
+                            res.send({ error: 'Not found' });
+                            return;
+                        }
+
+                        // default to plain-text. send()
+                        res.type('txt').send('Not found');
+                        return;
+                    }
                     else console.log('SID updated for\t' + req.body.username + "\t" + new Date());
                 });
+
                 if(req.body.redir != ''){
                     res.cookie("sid", hash).redirect(req.body.redir);
                 }
@@ -56,7 +97,28 @@ exports.create = function(req, res){
                 }
 
                 req.conn.query("SELECT sid FROM Users WHERE user_name = '" + req.body.username + "'", function (err, sids, fields){
-                    if(err) throw err;
+                    if(err){
+                        // Reply with ERROR 500
+                        res.status(500);
+                        // respond with html page
+                        if (req.accepts('html')) {
+                        res.render('error', {
+                            title: '500 | Internal Server Error',
+                            code: 500
+                        });
+                        return;
+                        }
+
+                        // respond with json
+                        if (req.accepts('json')) {
+                            res.send({ error: 'Not found' });
+                            return;
+                        }
+
+                        // default to plain-text. send()
+                        res.type('txt').send('Not found');
+                        return;
+                    }
                     else console.log(sids);
                 });
             }
