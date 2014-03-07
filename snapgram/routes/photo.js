@@ -15,9 +15,92 @@ exports.new = function(req, res){
     });
 };
 
+exports.getUserIDFromSID = function(req, res, next){
+    req.conn.query("SELECT * FROM Users WHERE sid = '" + req.cookies.sid + "'", function (err, results, fields){
+        if(err) throw err;
+        else{
+            console.log(results);
+            if(results.length > 0){
+                user_id = results[0].user_id;
+                console.log("User ID is " + user_id);
+                req.user_id = user_id;
+                next()
+            }
+            else{
+                //error, SID not found... redirect to login screen?
+                res.redirect('/sessions/new');
+            }
+        }
+    });
+}
+
+exports.addPhotoToTable = function(req, res, next){
+    req.upload_time = (new Date()/1);
+    req.conn.query("INSERT INTO Photos (time_stamp, owner_id, caption) VALUES ('" + req.upload_time + "', '" + req.user_id + "', '" + req.body.title + "')", function (err, results, fields){
+        if(err) throw err;
+        else{
+            console.log("successfully added photo to Photos TABLE");
+            next();
+        }
+    });
+}
+
+exports.getPhotoID = function(req, res, next){
+    console.log(req.upload_time);
+    req.conn.query("SELECT * FROM Photos WHERE time_stamp = '" + req.upload_time + "' AND owner_id = '" + req.user_id + "'", function (err, results, fields){
+        if(err) throw err;
+        else{
+            console.log(results);
+            if(results.length > 0){
+                photo_id = results[0].photo_id;
+                console.log("Photo ID is " + photo_id);
+                req.photo_id = photo_id;
+                next();
+            }
+            else{
+                //error, photo_id not found... what now?!?!?!?!? oh, internal error?
+                res.render('error', {
+                    title: '500 | Internal Server Error',
+                    code: 500
+                })
+            }
+        }
+    });
+}
+
+exports.insertPhotoPathToTable = function(req, res, next){
+    var nameArray = req.files.image.name.split('.');
+    var ext = nameArray[nameArray.length - 1];
+    req.photo_path = req.photo_id + "." + ext;
+    req.conn.query("UPDATE Photos SET photo_path = '" + req.photo_path + "' WHERE time_stamp = '" + req.upload_time + "' AND owner_id = '" + req.user_id + "'", function (err, results, fields){
+        if(err) throw err;
+        else{
+            console.log("path is: " + req.photo_path);
+            console.log("successfully added path to photo");
+            next();
+        }
+    });
+}
+
+exports.populateStreamTable = function(req, res, next){
+    req.conn.query("INSERT INTO Streams (stream_id, photo_id) SELECT follower_id, '" + req.photo_id + "' FROM Follows WHERE followee_id = '" + req.user_id + "'", function (err, results, fields){
+        if(err) throw err;
+        else{
+            console.log("updated Streams table")
+            next();
+        }
+    });
+}
+
 //app.post('/photos/create', photo.create);
 exports.create = function(req, res){
-    console.log('file info: ',req.files.image);
+    req.conn.query("SELECT * FROM Streams", function (err, results, fields){
+        if(err) throw err;
+        else{
+            console.log("STREAMS:");
+            console.log(results);
+        }
+    });
 
     //split the url into an array and then get the last chunk and render it out in the send req.
     var pathArray = req.files.image.path.split( '\\' );
@@ -31,7 +114,7 @@ exports.create = function(req, res){
         , '<img src="uploads/' + pathArray[(pathArray.length - 1)] + '">'
     ));
 
-    fs.rename(req.files.image.path, req.files.image.path.replace(pathArray[pathArray.length-1], req.files.image.name));
+    fs.rename(req.files.image.path, req.files.image.path.replace(pathArray[pathArray.length-1], req.photo_path));
 };
 
 //app.get('/photos/:id.:ext', photo.show);

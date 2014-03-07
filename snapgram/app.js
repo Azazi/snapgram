@@ -53,14 +53,29 @@ if ('development' == app.get('env')) {
 /// them again.
 var queries = ['DROP TABLE IF EXISTS Users, Photos, Follows, Streams', 
                'CREATE TABLE IF NOT EXISTS Users (user_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, user_name VARCHAR(35), first_name VARCHAR(35), last_name VARCHAR(35), password CHAR(128), followers_count INT UNSIGNED, photo_count INT UNSIGNED, gender CHAR(1), dob DATE, profile_image BIGINT UNSIGNED, feed_id INT UNSIGNED, stream_id INT UNSIGNED, sid VARCHAR(35)) ENGINE=INNODB;',
-               'CREATE TABLE IF NOT EXISTS Photos (photo_id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT, caption VARCHAR(200), time_stamp DATETIME, owner_id INT UNSIGNED) ENGINE=INNODB;',
+               'CREATE TABLE IF NOT EXISTS Photos (photo_id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT, caption VARCHAR(200), time_stamp BIGINT UNSIGNED, owner_id INT UNSIGNED, photo_path VARCHAR(200)) ENGINE=INNODB;',
                'CREATE TABLE IF NOT EXISTS Follows (follower_id INT UNSIGNED, followee_id INT UNSIGNED) ENGINE=INNODB;',
-               'CREATE TABLE IF NOT EXISTS Streams (stream_id INT UNSIGNED, photo_id BIGINT UNSIGNED) ENGINE=INNODB;',
+               'CREATE TABLE IF NOT EXISTS Streams (stream_id INT UNSIGNED, photo_id BIGINT UNSIGNED, photo_path VARCHAR(200)) ENGINE=INNODB;',
     "INSERT INTO Users (user_name, first_name, last_name, password) VALUES ('username1', 'John', 'Doe', '" + crypto.createHash('md5').update('password1').digest('hex') + "');",
     "INSERT INTO Users (user_name, first_name, last_name, password) VALUES ('username2', 'Chong-Wei', 'Lee', '" + crypto.createHash('md5').update('password2').digest('hex') + "');",
     "INSERT INTO Users (user_name, first_name, last_name, password) VALUES ('username3', 'Dan', 'Lin', '" + crypto.createHash('md5').update('password3').digest('hex') + "');",
     "INSERT INTO Users (user_name, first_name, last_name, password) VALUES ('username4', 'Yun Lei', 'Zhao', '" + crypto.createHash('md5').update('password4').digest('hex') + "');",
-    "INSERT INTO Users (user_name, first_name, last_name, password) VALUES ('username5', 'Yong Dae', 'Lee', '" + crypto.createHash('md5').update('password5').digest('hex') + "');"]
+    "INSERT INTO Users (user_name, first_name, last_name, password) VALUES ('username5', 'Yong Dae', 'Lee', '" + crypto.createHash('md5').update('password5').digest('hex') + "');",
+    "INSERT INTO Follows (follower_id, followee_id) VALUES ('0', '1')",
+    "INSERT INTO Follows (follower_id, followee_id) VALUES ('1', '3')",
+    "INSERT INTO Follows (follower_id, followee_id) VALUES ('1', '4')",
+    "INSERT INTO Follows (follower_id, followee_id) VALUES ('3', '1')",
+    "INSERT INTO Follows (follower_id, followee_id) VALUES ('3', '4')",
+    "INSERT INTO Follows (follower_id, followee_id) VALUES ('5', '1')",
+    "INSERT INTO Follows (follower_id, followee_id) VALUES ('4', '1')",
+    "INSERT INTO Follows (follower_id, followee_id) VALUES ('4', '2')",
+    "INSERT INTO Follows (follower_id, followee_id) VALUES ('4', '3')",
+    "INSERT INTO Follows (follower_id, followee_id) VALUES ('4', '5')",
+    "INSERT INTO Follows (follower_id, followee_id) VALUES ('1', '1')",
+    "INSERT INTO Follows (follower_id, followee_id) VALUES ('2', '2')",
+    "INSERT INTO Follows (follower_id, followee_id) VALUES ('3', '3')",
+    "INSERT INTO Follows (follower_id, followee_id) VALUES ('4', '4')",
+    "INSERT INTO Follows (follower_id, followee_id) VALUES ('5', '5')"]
 queries.forEach(function(queryString){
     conn.query(queryString, function (err, rows, fields){
         if(err) throw err;
@@ -95,30 +110,46 @@ app.configure(function(){
     });
 });
 
-app.get('/', routes.index(conn));
-app.get('/feed', routes.index(conn));
+app.get('/', appendConn, routes.index);
+app.get('/feed', appendConn, routes.index);
 
-app.get('/users', user.list);
+//app.get('/users', user.list);
 app.get('/users/new', user.new);
-app.post('/users/create', user.create(conn));
-app.get('/users/:id', user.show);
-app.get('/users/:id/follow', user.follow);
-app.get('/users/:id/unfollow', user.unfollow);
+app.post('/users/create', appendConn, user.create);
+app.get('/users/:id', checkAuth, appendConn, user.show);
+app.get('/users/:id/follow', checkAuth, user.follow);
+app.get('/users/:id/unfollow', checkAuth, user.unfollow);
 
 app.get('/sessions/new', session.new);
-app.post('/sessions/create', session.create(conn));
+app.post('/sessions/create', appendConn, session.create);
+app.get('/sessions/end', session.end);
 
 app.get('/photos/new', checkAuth, photo.new);
-app.post('/photos/create', photo.create);
-app.get('/photos/thumbnail/:id.:ext', photo.showThumbnail);
-app.get('/photos/:id.:ext', photo.show);
+app.post('/photos/create', checkAuth, appendConn, photo.getUserIDFromSID, photo.addPhotoToTable, photo.getPhotoID, photo.insertPhotoPathToTable, photo.populateStreamTable, photo.create);
+app.get('/photos/thumbnail/:id.:ext', checkAuth,  photo.showThumbnail);
+app.get('/photos/:id.:ext', checkAuth, photo.show);
 
 function checkAuth(req, res, next) {
-    if (!req.session.user_id) {
-        res.send('You are not authorized to view this page');
-    } else {
-        next();
-    }
+    conn.query("SELECT * FROM Users WHERE sid = '" + req.cookies.sid + "'", function (err, sids, fields){
+        if(err) throw err;
+        else{
+            if(sids.length <= 0){
+                //res.send('You are not authorized to view this page');
+                res.render('login', {
+                    title: 'Express',
+                    error: "You must be logged in to view this page."
+                });
+            }
+            else{
+                next();
+            }
+        }
+    });
+}
+
+function appendConn(req, res, next) {
+    req.conn = conn;
+    next();
 }
 
 http.createServer(app).listen(app.get('port'), function(){
