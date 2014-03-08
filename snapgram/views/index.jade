@@ -1,6 +1,9 @@
 extends layout
-
+block scripts
+	script(src='/stylesheets/css/jquery.min.js', type='text/javascript').
+	script(src='/stylesheets/css/jquery.timeago.js', type='text/javascript').
 block content
+	-function removeOldTable(){var parent = document.getElementById('streamTable'); while(parent.hasChildNodes()){parent.removeChild(parent.firstChild);}}
 	.container--fluid
 		.row-fluid
 			-if(!logged_in){		
@@ -16,4 +19,105 @@ block content
 					a(href='/sessions/new').btn.btn-primary Sign In »
 			-}
 			-else{
+				.col-lg-8.col-lg-offset-2(style='padding-top: 100px;')					
+					table#streamTable(width='400', border='1', cellpadding='5', border-collapse='collapse', style='width: 300px;')
+						-stream = stream.reverse()
+						-var index, limit
+						-if(page && typeof page != undefined){index = 30*(page-1); limit = page*30}
+						-else{page=1; index = 0; limit = 30}
+						-for(index; index<limit && index<stream.length; index++){
+							tr(border='1', padding-bottom='50')
+								-var s = '/photos/share/' + stream[index].photo_id
+								-var p = '/photos/thumbnail/'+stream[index].photo_path
+								-var u = '/users/'+stream[index].owner_id
+								-var to_date = new Date()
+								-var from_date = new Date(stream[index].time_stamp)
+								-var yearDiff = to_date.getFullYear() - from_date.getFullYear()
+								-var monthDiff = to_date.getMonth() - from_date.getMonth()
+								-var dayDiff = to_date.getDate() - from_date.getDate()
+								-var weekDiff = Math.floor(dayDiff/7)
+								-var hourDiff = to_date.getHours() - from_date.getHours()
+								-var minuteDiff = to_date.getMinutes() - from_date.getMinutes()
+								-var returnString
+								-if(yearDiff === 0){
+									// Same year
+									-if(monthDiff === 0){
+										// Same month
+										-if(weekDiff === 0){
+											// Same week
+											-if(dayDiff === 0){
+												// Same day
+												-if(hourDiff === 0){
+													// Same hour
+													-if(minuteDiff === 0){
+														// Same minute
+														-returnString = 'a moment'
+													-}
+													-else{
+														// Different minute
+														-returnString = minuteDiff + ' minute'
+														-if(minuteDiff > 1){
+															-returnString += 's'
+														-}
+													-}
+												-}
+												-else{
+													// Different hour
+													-returnString = hourDiff + ' hour'
+													-if(hourDiff > 1){
+														-returnString += 's'
+													-}
+												-}
+											-}
+											-else{
+												// Different day
+												-returnString = dayDiff + ' day'
+												-if(dayDiff > 1){
+													-returnString += 's'
+												-}
+											-}
+										-}
+										-else{
+											// Different week
+											-returnString = weekDiff + ' week'
+											-if(weekDiff > 1){
+												-returnString += 's'
+											-}			
+										-}
+									-}
+									-else{
+										// Different month
+										-returnString = monthDiff + ' month'
+										-if(monthDiff > 1){
+											-returnString += 's'
+										-}
+									-}		
+								-}
+								-else{
+									// Different year
+									-returnString = yearDiff + ' year'
+									-if(yearDiff > 1){
+										-returnString += 's'
+									-}
+								-}	
+								td(align='center', valign='center', border='1')
+									img(src='#{p}', alt='#{stream[index].caption}')
+									br
+									a(href='#{u}') #{stream[index].owner_name}
+									br
+									a(href='#{s}') Share
+									br
+									|#{stream[index].caption}
+									br
+									|uploaded #{returnString} ago
+							-index++	
+						-}
+						-if(stream.length>0 && limit<=stream.length){
+							tr
+								tr(border='0', padding-bottom='50')			
+								td(align='center', valign='center', border='0')
+											-page++
+											-var newPage = '/feed?page=' + page.toString()
+											a(href='#{newPage}').btn.btn-primary Next »
+						-}
 			-}

@@ -8,27 +8,33 @@ exports.index = function(req, res){
         if(err){
             sendInternalServerError(req, res);
         }
-        else{
+        else{            
             if(results.length > 0){
-                req.conn.query("SELECT * FROM Streams a, Photos b WHERE a.stream_id = '" + results[0].user_id + "' AND a.photo_id = b.photo_id", function (err, results, fields){
+                var uname = results[0].user_name;
+                req.conn.query("SELECT * FROM Streams a, Users c, Photos b WHERE a.stream_id = '" + results[0].user_id + "' AND a.photo_id = b.photo_id AND c.user_id = '" + results[0].user_id + "'", function (err, results, fields){
                     if(err){
                         sendInternalServerError(req, res);
+                        return;
                     }
-                    else{
+                    else{                      
                         console.log(results);
+                        res.status(200);
+                        res.render('index', {
+                            title: 'Welcome to Snapgram',
+                            logged_in: true,
+                            sid: req.cookies.sid,
+                            user_name: uname,
+                            stream: results,
+                            page: req.query.page
+                        });
                     }
                 });
 
-                res.render('index', {
-                    title: 'Express',
-                    logged_in: true,
-                    sid: req.cookies.sid,
-                    user_name: results[0].user_name
-                });
+
             }
             else{
                 res.render('index', {
-                    title: 'Express',
+                    title: 'Welcome to Snapgram',
                     logged_in: false
                 })
             }

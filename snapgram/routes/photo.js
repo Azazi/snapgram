@@ -11,7 +11,8 @@ var util = require('util');
 exports.new = function(req, res){
     res.render('upload', {
         title: 'Upload Images',
-        logged_in: true
+        logged_in: true,
+        user_name: req.username
     });
 };
 
@@ -26,6 +27,7 @@ exports.getUserIDFromSID = function(req, res, next){
                 user_id = results[0].user_id;
                 console.log("User ID is " + user_id);
                 req.user_id = user_id;
+                req.name = results[0].name;
                 next()
             }
             else{
@@ -53,7 +55,7 @@ exports.addPhotoToTable = function(req, res, next){
 
         if(ext === 'jpg' || ext === 'jpeg' || ext === 'gif' || ext === 'bmp' || ext === 'png'){
             req.upload_time = (new Date()/1);
-            req.conn.query("INSERT INTO Photos (time_stamp, owner_id, caption) VALUES ('" + req.upload_time + "', '" + req.user_id + "', '" + req.body.title + "')", function (err, results, fields){
+            req.conn.query("INSERT INTO Photos (time_stamp, owner_id, owner_name, caption) VALUES ('" + req.upload_time + "', '" + req.user_id + "', '" + req.name + "', '" + req.body.title + "')", function (err, results, fields){
                 if(err){
                     sendInternalServerError(req, res);
                 }
@@ -83,7 +85,7 @@ exports.addPhotoToTableShared = function(req, res, next){
             sendInternalServerError(req, res);
         }
         if(results[0].original_owner != null){
-            req.conn.query("INSERT INTO Photos (caption, time_stamp, owner_id, photo_path, original_owner) VALUES ('" + results[0].caption + "', '" + req.upload_time + "', '" + req.user_id + "', '" + results[0].photo_path + "', '" + results[0].original_owner + "')", function (err, results, fields){
+            req.conn.query("INSERT INTO Photos (caption, time_stamp, owner_id, owner_name, photo_path, original_owner) VALUES ('" + results[0].caption + "', '" + req.upload_time + "', '" + req.user_id + "',  '" + req.name + "', '" + results[0].photo_path + "', '" + results[0].original_owner + "')", function (err, results, fields){
                 if(err){
                     sendInternalServerError(req, res);
                 }
@@ -100,7 +102,7 @@ exports.addPhotoToTableShared = function(req, res, next){
             });
         }
         else{
-            req.conn.query("INSERT INTO Photos (caption, time_stamp, owner_id, photo_path, original_owner) VALUES ('" + results[0].caption + "', '" + req.upload_time + "', '" + req.user_id + "', '" + results[0].photo_path + "', '" + results[0].owner_id + "')", function (err, results, fields){
+            req.conn.query("INSERT INTO Photos (caption, time_stamp, owner_id, owner_name, photo_path, original_owner) VALUES ('" + results[0].caption + "', '" + req.upload_time + "', '" + req.user_id + "', '" + req.name + "', '" + results[0].photo_path + "', '" + results[0].owner_id + "')", function (err, results, fields){
                 if(err){
                     sendInternalServerError(req, res);
                 }
@@ -168,7 +170,8 @@ exports.populateStreamTable = function(req, res, next){
 }
 
 exports.populateStreamTableShared = function(req, res, next){
-    req.conn.query("SELECT b.stream_id, b.photo_id FROM Follows a, Streams b, Photos c WHERE a.followee_id = '" + req.user_id + "' AND b.stream_id = a.follower_id AND b.photo_id = c.photo_id", function(err, results){
+    req.conn.query("SELECT * FROM Follows WHERE followee_id = '" + req.user_id + "'", function(err, results){
+    //req.conn.query("SELECT b.stream_id, b.photo_id FROM Follows a, Streams b, Photos c WHERE a.followee_id = '" + req.user_id + "' AND b.stream_id = a.follower_id AND b.photo_id = c.photo_id", function(err, results){
         if(err){
             sendInternalServerError(req, res);
         }
@@ -176,7 +179,7 @@ exports.populateStreamTableShared = function(req, res, next){
             console.log("Crazy abc select:");
             console.log(results);
             results.forEach(function(result){
-                req.conn.query("DELETE FROM Streams WHERE stream_id = '" + result.stream_id + "' AND photo_id = '" + result.photo_id + "'", function(err, results){
+                req.conn.query("DELETE FROM Streams WHERE stream_id = '" + result.follower_id + "' AND photo_id = '" + req.params.pid + "'", function(err, results){
                     if(err){
                         sendInternalServerError(req, res);
                     }
@@ -202,8 +205,12 @@ exports.create = function(req, res){
     //split the url into an array and then get the last chunk and render it out in the send req.
     var pathArray = req.files.image.path.split( '\\' );
     fs.rename(req.files.image.path, req.files.image.path.replace(pathArray[pathArray.length-1], req.photo_path));
-    res.status(200);
-    res.redirect('/photos/'+req.photo_path);
+    res.status(302);
+    res.render('upload', {
+        title: 'Upload Images',
+        logged_in: true,
+        error: 'Image uploaded successfully'
+    });      
 };
 
 //app.get('/photos/:id.:ext', photo.show);

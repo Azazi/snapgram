@@ -66,7 +66,7 @@ exports.create = function(req, res){
                             sendInternalServerError(req, res);
                         }
                         else{
-                            req.conn.query("INSERT INTO Follows (follower_id, followee_id) VALUES ('" + user_ids[0] + "', '" + user_ids[0].user_id + "');", function (err, results, fields){
+                            req.conn.query("INSERT INTO Follows (follower_id, followee_id) VALUES ('" + user_ids[0].user_id + "', '" + user_ids[0].user_id + "');", function (err, results, fields){
                                 if(err){
                                     sendInternalServerError(req, res);
                                 }
@@ -79,15 +79,37 @@ exports.create = function(req, res){
     }
 };
 
+exports.checkIfFollows = function(req, res, next){
+    req.conn.query("SELECT * FROM Follows WHERE follower_id = '" + req.myuid + "' AND followee_id = '" + req.params.id + "'", function (err, results, fields){
+        if(err){
+            sendInternalServerError(req, res);
+            return;
+        }
+        else{
+            if(results.length == 0){
+                req.follows = false;
+            }
+            else{
+                req.follows = true;
+            }
+            next()
+        }
+    });
+}
+
 exports.show = function(req, res){
+    var uname;
     req.conn.query("SELECT * FROM Users WHERE user_id = '" + req.params.id + "'", function (err, results, fields){
         if(err){
             sendInternalServerError(req, res);
+            return;
         }
         else{
             if(results.length == 0){
                 sendNotFoundError(req,res);
+                return;
             }
+            uname = results[0].user_name;
         }
     });
     console.log("USER DOES EXIST");
@@ -97,7 +119,18 @@ exports.show = function(req, res){
         }
         else{
             console.log(photos);
-            res.send(photos);
+            res.status(200);
+            res.render('user', {
+                title: 'User Stream',
+                logged_in: true,
+                sid: req.cookies.sid,
+                user_name: uname,
+                stream: photos,
+                page: req.query.page,
+                follows: req.follows,
+                uid: req.params.id,
+                myuid: req.myuid
+            });
             //send photos to view for user/:id and render them
         }
     });

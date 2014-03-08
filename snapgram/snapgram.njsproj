@@ -1415,6 +1415,7 @@
     <Content Include="views\login.jade" />
     <Content Include="views\register.jade" />
     <Content Include="views\upload.jade" />
+    <Content Include="views\user.jade" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="images\" />

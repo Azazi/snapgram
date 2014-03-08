@@ -27,6 +27,9 @@ var app = express();
 app.set('port', 8550);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+
+app.set('view options', { locals: { scripts: ['jquery.js'] } });
+
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser({ keepExtensions: true, uploadDir: __dirname + '/images' }));
@@ -54,7 +57,7 @@ if ('development' == app.get('env')) {
 /// them again.
 var queries = ['DROP TABLE IF EXISTS Users, Photos, Follows, Streams', 
                'CREATE TABLE IF NOT EXISTS Users (user_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, user_name VARCHAR(35), name VARCHAR(70), password CHAR(128), followers_count INT UNSIGNED, photo_count INT UNSIGNED, gender CHAR(1), dob DATE, profile_image BIGINT UNSIGNED, feed_id INT UNSIGNED, stream_id INT UNSIGNED, sid VARCHAR(35)) ENGINE=INNODB;',
-               'CREATE TABLE IF NOT EXISTS Photos (photo_id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT, caption VARCHAR(200), time_stamp BIGINT UNSIGNED, owner_id INT UNSIGNED, photo_path VARCHAR(200), original_owner BIGINT UNSIGNED) ENGINE=INNODB;',
+               'CREATE TABLE IF NOT EXISTS Photos (photo_id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT, caption VARCHAR(200), time_stamp BIGINT UNSIGNED, owner_id INT UNSIGNED, photo_path VARCHAR(200), owner_name VARCHAR(70), original_owner BIGINT UNSIGNED) ENGINE=INNODB;',
                'CREATE TABLE IF NOT EXISTS Follows (follower_id INT UNSIGNED, followee_id INT UNSIGNED) ENGINE=INNODB;',
                'CREATE TABLE IF NOT EXISTS Streams (stream_id INT UNSIGNED, photo_id BIGINT UNSIGNED) ENGINE=INNODB;',
     "INSERT INTO Users (user_name, name, password) VALUES ('username1', 'John Doe', '" + crypto.createHash('md5').update('password1').digest('hex') + "');",
@@ -129,7 +132,7 @@ app.get('/feed', checkAuth, appendConn, routes.index);
 //app.get('/users', user.list);
 app.get('/users/new', checkAuthInverse, user.new);
 app.post('/users/create', appendConn, user.create);
-app.get('/users/:id', checkAuth, appendConn, user.show);
+app.get('/users/:id', checkAuth, appendConn, user.checkIfFollows, user.show);
 app.get('/users/:id/follow', checkAuth, appendConn, user.follow);
 app.get('/users/:id/unfollow', checkAuth, appendConn, user.unfollow);
 
@@ -163,6 +166,9 @@ function checkAuth(req, res, next) {
                 res.redirect('/sessions/new?redir='+req.url, 302);
             }
             else{
+                console.log(sids[0]);
+                req.username = sids[0].user_name;
+                req.myuid = sids[0].user_id;
                 next();
             }
         }
