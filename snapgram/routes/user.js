@@ -207,7 +207,8 @@ function sendInternalServerError(req, res){
     if (req.accepts('html')) {
     res.render('error', {
         title: '500 | Internal Server Error',
-        code: 500
+        code: 500,
+        myuid: req.myuid
     });
     return;
     }
@@ -230,7 +231,8 @@ function sendNotFoundError(req,res){
     if (req.accepts('html')) {
         res.render('error', {
             title: '404 | Page Not Found',
-            code: 404
+            code: 404,
+            myuid: req.myuid
         });
         return;
     }

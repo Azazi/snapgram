@@ -12,7 +12,8 @@ exports.new = function(req, res){
     res.render('upload', {
         title: 'Upload Images',
         logged_in: true,
-        user_name: req.username
+        user_name: req.username,
+        myuid: req.myuid
     });
 };
 
@@ -46,7 +47,8 @@ exports.addPhotoToTable = function(req, res, next){
         res.render('upload', {
             title: 'Upload Images',
             logged_in: true,
-            error: 'file cannot be empty'
+            error: 'file cannot be empty',
+            myuid: req.myuid
         });
     }
     else{
@@ -72,7 +74,8 @@ exports.addPhotoToTable = function(req, res, next){
             res.render('upload', {
                 title: 'Upload Images',
                 logged_in: true,
-                error: 'not an image file'
+                error: 'not an image file',
+                myuid: req.myuid
             });            
         }
     }
@@ -84,7 +87,7 @@ exports.addPhotoToTableShared = function(req, res, next){
         if(err){
             sendInternalServerError(req, res);
         }
-        if(results[0].original_owner != null){
+        if(typeof results[0] != 'undefined' && results[0].original_owner != null){
             req.conn.query("INSERT INTO Photos (caption, time_stamp, owner_id, owner_name, photo_path, original_owner) VALUES ('" + results[0].caption + "', '" + req.upload_time + "', '" + req.user_id + "',  '" + req.name + "', '" + results[0].photo_path + "', '" + results[0].original_owner + "')", function (err, results, fields){
                 if(err){
                     sendInternalServerError(req, res);
@@ -101,7 +104,7 @@ exports.addPhotoToTableShared = function(req, res, next){
                 }
             });
         }
-        else{
+        else if(typeof results[0] != 'undefined'){
             req.conn.query("INSERT INTO Photos (caption, time_stamp, owner_id, owner_name, photo_path, original_owner) VALUES ('" + results[0].caption + "', '" + req.upload_time + "', '" + req.user_id + "', '" + req.name + "', '" + results[0].photo_path + "', '" + results[0].owner_id + "')", function (err, results, fields){
                 if(err){
                     sendInternalServerError(req, res);
@@ -116,6 +119,9 @@ exports.addPhotoToTableShared = function(req, res, next){
                     next();
                 }
             });
+        }
+        else{
+            sendNotFoundError(req,res);
         }
     })
 }
@@ -209,7 +215,8 @@ exports.create = function(req, res){
     res.render('upload', {
         title: 'Upload Images',
         logged_in: true,
-        error: 'Image uploaded successfully'
+        error: 'Image uploaded successfully',
+        myuid: req.myuid
     });      
 };
 
@@ -319,7 +326,8 @@ function sendInternalServerError(req, res){
     if (req.accepts('html')) {
     res.render('error', {
         title: '500 | Internal Server Error',
-        code: 500
+        code: 500,
+        myuid: req.myuid
     });
     return;
     }
@@ -342,7 +350,8 @@ function sendNotFoundError(req,res){
     if (req.accepts('html')) {
         res.render('error', {
             title: '404 | Page Not Found',
-            code: 404
+            code: 404,
+            myuid: req.myuid
         });
         return;
     }

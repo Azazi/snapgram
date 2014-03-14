@@ -25,7 +25,8 @@ exports.index = function(req, res){
                             sid: req.cookies.sid,
                             user_name: uname,
                             stream: results,
-                            page: req.query.page
+                            page: req.query.page,
+                            myuid: req.myuid
                         });
                     }
                 });
@@ -50,7 +51,8 @@ function sendInternalServerError(req, res){
     if (req.accepts('html')) {
     res.render('error', {
         title: '500 | Internal Server Error',
-        code: 500
+        code: 500,
+        myuid: req.myuid
     });
     return;
     }

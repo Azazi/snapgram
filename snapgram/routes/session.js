@@ -8,7 +8,8 @@ var _ = require('underscore');
 exports.new = function(req, res){
 	res.render('login', {
 		title: 'Login to Snapgram',
-        redir: req.query.redir
+        redir: req.query.redir,
+        myuid: req.myuid
     });
 };
 
@@ -86,7 +87,8 @@ function sendInternalServerError(req, res){
     if (req.accepts('html')) {
     res.render('error', {
         title: '500 | Internal Server Error',
-        code: 500
+        code: 500,
+        myuid: req.myuid
     });
     return;
     }

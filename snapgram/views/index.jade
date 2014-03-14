@@ -19,8 +19,9 @@ block content
 					a(href='/sessions/new').btn.btn-primary Sign In »
 			-}
 			-else{
-				.col-lg-8.col-lg-offset-2(style='padding-top: 100px;')					
-					table#streamTable(width='400', border='1', cellpadding='5', border-collapse='collapse', style='width: 300px;')
+				.col-lg-8.col-lg-offset-2(style='padding-top: 100px;')
+					h1 Image Feed		
+					table#streamTable(width='400', border='0', cellpadding='5', border-collapse='collapse', style='width: 400px;')
 						-stream = stream.reverse()
 						-var index, limit
 						-if(page && typeof page != 'undefined'){index = 30*(page-1); limit = page*30}
@@ -29,6 +30,7 @@ block content
 							tr(border='1', padding-bottom='50')
 								-var s = '/photos/share/' + stream[index].photo_id
 								-var p = '/photos/thumbnail/'+stream[index].photo_path
+								-var originalPicture = '/photos/'+stream[index].photo_path
 								-var u = '/users/'+stream[index].owner_id
 								-var to_date = new Date()
 								-var from_date = new Date(stream[index].time_stamp)
@@ -100,16 +102,26 @@ block content
 										-returnString += 's'
 									-}
 								-}	
-								td(align='center', valign='center', border='1')
-									img(src='#{p}', alt='#{stream[index].caption}')
+								td(align='center', valign='center', border='1', bgcolor='#FFFFFF', colspan='2')
+									font(color='white') _
 									br
-									a(href='#{u}') #{stream[index].owner_name}
+									a(href='#{originalPicture}')
+										img(src='#{p}', alt='#{stream[index].caption}')
 									br
-									a(href='#{s}') Share
-									br
-									|#{stream[index].caption}
-									br
-									|uploaded #{returnString} ago	
+									font(color='white') _
+							tr
+								tr(border='0', padding-bottom='50')
+									td(border='0', colspan='2')
+										|#{stream[index].caption}
+								tr(border='0', padding-bottom='50')
+									td(border='0')
+										a(href='#{u}') #{stream[index].owner_name}
+									td(align='right', valign='right', border='0')
+										a(href='#{s}') Share
+								tr(border='0', padding-bottom='50')
+									td(align='center', valign='center', border='0', colspan='2')
+										|uploaded #{returnString} ago
+
 						-}
 						-if(stream.length>0 && limit<=stream.length){
 							tr
