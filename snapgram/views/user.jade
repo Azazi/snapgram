@@ -20,7 +20,7 @@ block content
 							-}
 					-stream = stream.reverse()
 					-var index, limit
-					-if(page && typeof page != undefined){index = 30*(page-1); limit = page*30}
+					-if(page && typeof page != 'undefined'){index = 30*(page-1); limit = page*30}
 					-else{page=1; index = 0; limit = 30}
 					-for(index; index<limit && index<stream.length; index++){
 						tr(border='1', padding-bottom='50')
@@ -107,7 +107,6 @@ block content
 								|#{stream[index].caption}
 								br
 								|uploaded #{returnString} ago
-						-index++	
 					-}
 					-if(stream.length>0 && limit<=stream.length){
 						tr
