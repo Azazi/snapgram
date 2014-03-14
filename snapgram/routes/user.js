@@ -158,7 +158,7 @@ exports.follow = function(req, res){
                             }
                             else{
                                 console.log(user_ids[0].user_id + " is now following " + req.params.id);
-                                res.redirect('/');
+                                res.redirect('/users/'+req.params.id);
                             }
                         });
                     }
@@ -190,7 +190,7 @@ exports.unfollow = function(req, res){
                             }
                             else{
                                 console.log(user_ids[0].user_id + " has unfollowed " + req.params.id);
-                                res.redirect('/');
+                                res.redirect('/users/'+req.params.id);
                             }
                         });
                     }

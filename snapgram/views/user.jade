@@ -5,20 +5,23 @@ block scripts
 block content
 	-function removeOldTable(){var parent = document.getElementById('streamTable'); while(parent.hasChildNodes()){parent.removeChild(parent.firstChild);}}
 	.container--fluid
-		.row-fluid			
+		.row-fluid
+			.col-lg-2.col-lg-offset-8(style='padding-top: 20px; padding-left:20px;')
+				-if(follows && myuid != uid){
+					-var linktext = '/users/' + uid + '/unfollow'
+					a(href='#{linktext}')
+						button.btn.btn-default(type='button', data-container='body', data-toggle='popover', data-placement='left', data-content='', data-original-title='', title='') Unfollow
+				-}
+				-else if(myuid != uid){
+					-var linktext = '/users/' + uid + '/follow'
+					a(href='#{linktext}')
+						button.btn.btn-default(type='button', data-container='body', data-toggle='popover', data-placement='left', data-content='', data-original-title='', title='') Follow
+				-}
+	.container--fluid
+		.row-fluid
 			.col-lg-8.col-lg-offset-2(style='padding-top: 100px;')
 				h1 #{user_name}'s Image Feed				
 				table#streamTable(width='400', border='0', cellpadding='5', border-collapse='collapse', style='width: 400px;')
-					tr(border='1', padding-bottom='50')
-						td(align='center', valign='center', border='1', colspan='2')
-							-if(follows && myuid != uid){
-								-var linktext = '/users/' + uid + '/unfollow'
-								a(href='#{linktext}') Unfollow
-							-}
-							-else if(myuid != uid){
-								-var linktext = '/users/' + uid + '/follow'
-								a(href='#{linktext}') Follow
-							-}
 					-stream = stream.reverse()
 					-var index, limit
 					-if(page && typeof page != 'undefined'){index = 30*(page-1); limit = page*30}
