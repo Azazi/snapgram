@@ -32,6 +32,7 @@ block content
 							-var p = '/photos/thumbnail/'+stream[index].photo_path
 							-var originalPicture = '/photos/'+stream[index].photo_path
 							-var u = '/users/'+stream[index].owner_id
+							-var ou = '/users/'+stream[index].original_owner
 							-var to_date = new Date()
 							-var from_date = new Date(stream[index].time_stamp)
 							-var yearDiff = to_date.getFullYear() - from_date.getFullYear()
@@ -115,13 +116,22 @@ block content
 									|#{stream[index].caption}
 							tr(border='0', padding-bottom='50')
 								td(border='0')
-									a(href='#{u}') #{stream[index].owner_name}
+									-var ownerLine = ''
+									-if(stream[index].shared === 'yes'){
+										a(href='#{ou}') #{stream[index].original_owner_name} 
+										|(shared by 
+										a(href='#{u}') #{stream[index].owner_name}
+										|)
+									-}
+									-else{ownerLine = stream[index].owner_name}
+									a(href='#{u}') #{ownerLine}									
 								td(align='right', valign='right', border='0')
 									a(href='#{s}')
 										span.glyphicon.glyphicon-share
 							tr(border='0', padding-bottom='50')
-								td(align='center', valign='center', border='0', colspan='2')
-									|uploaded #{returnString} ago
+								td(border='0', colspan='2')
+									|#{returnString} ago
+									p
 					-}
 					-if(stream.length>0 && limit<=stream.length){
 						tr

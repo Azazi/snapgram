@@ -14,9 +14,8 @@ exports.index = function(req, res){
                 req.conn.query("SELECT * FROM Streams a, Users c, Photos b WHERE a.stream_id = '" + results[0].user_id + "' AND a.photo_id = b.photo_id AND c.user_id = '" + results[0].user_id + "'", function (err, results, fields){
                     if(err){
                         sendInternalServerError(req, res);
-                        return;
                     }
-                    else{                      
+                    else{
                         console.log(results);
                         res.status(200);
                         res.render('index', {

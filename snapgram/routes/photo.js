@@ -57,7 +57,8 @@ exports.addPhotoToTable = function(req, res, next){
 
         if(ext === 'jpg' || ext === 'jpeg' || ext === 'gif' || ext === 'bmp' || ext === 'png'){
             req.upload_time = (new Date()/1);
-            req.conn.query("INSERT INTO Photos (time_stamp, owner_id, owner_name, caption) VALUES ('" + req.upload_time + "', '" + req.user_id + "', '" + req.name + "', '" + req.body.title + "')", function (err, results, fields){
+            var shared = 'no';
+            req.conn.query("INSERT INTO Photos (time_stamp, owner_id, owner_name, original_owner, original_owner_name, caption, shared) VALUES ('" + req.upload_time + "', '" + req.user_id + "', '" + req.name + "', '" + req.user_id + "', '" + req.name + "', '" + req.body.title + "', '" + shared + "')", function (err, results, fields){
                 if(err){
                     sendInternalServerError(req, res);
                 }
@@ -88,20 +89,28 @@ exports.addPhotoToTableShared = function(req, res, next){
             sendInternalServerError(req, res);
         }
         if(typeof results[0] != 'undefined' && results[0].original_owner != null){
-            req.conn.query("INSERT INTO Photos (caption, time_stamp, owner_id, owner_name, photo_path, original_owner) VALUES ('" + results[0].caption + "', '" + req.upload_time + "', '" + req.user_id + "',  '" + req.name + "', '" + results[0].photo_path + "', '" + results[0].original_owner + "')", function (err, results, fields){
+            req.conn.query("SELECT name FROM Users WHERE user_id = '"+ results[0].original_owner +"'", function(err,name){
                 if(err){
                     sendInternalServerError(req, res);
                 }
                 else{
-                    req.conn.query("SELECT * FROM Photos", function(err, results){
+                    var shared = 'yes';
+                    req.conn.query("INSERT INTO Photos (caption, time_stamp, owner_id, owner_name, photo_path, original_owner, original_owner_name, shared) VALUES ('" + results[0].caption + "', '" + req.upload_time + "', '" + req.user_id + "',  '" + req.name + "', '" + results[0].photo_path + "', '" + results[0].original_owner + "', '" + name[0].name + "', '" + shared + "')", function (err, results, fields){
                         if(err){
                             sendInternalServerError(req, res);
                         }
-                        console.log(results)
-                    })
-                    console.log("updated Streams table")
-                    next();
-                }
+                        else{
+                            req.conn.query("SELECT * FROM Photos", function(err, results){
+                                if(err){
+                                    sendInternalServerError(req, res);
+                                }
+                                console.log(results)
+                            })
+                            console.log("updated Streams table")
+                            next();
+                        }
+                    });
+                }                    
             });
         }
         else if(typeof results[0] != 'undefined'){
@@ -175,6 +184,10 @@ exports.populateStreamTable = function(req, res, next){
     });
 }
 
+exports.redirect = function(req,res){
+    res.redirect("/");
+}
+
 exports.populateStreamTableShared = function(req, res, next){
     req.conn.query("SELECT * FROM Follows WHERE followee_id = '" + req.user_id + "'", function(err, results){
     //req.conn.query("SELECT b.stream_id, b.photo_id FROM Follows a, Streams b, Photos c WHERE a.followee_id = '" + req.user_id + "' AND b.stream_id = a.follower_id AND b.photo_id = c.photo_id", function(err, results){
@@ -190,7 +203,7 @@ exports.populateStreamTableShared = function(req, res, next){
                         sendInternalServerError(req, res);
                     }
                 })
-            })
+            });
             next();
         }
     })
@@ -224,8 +237,11 @@ exports.create = function(req, res){
 exports.show = function(req, res){
     var id = req.params.id;
     var ext = req.params.ext;
-
-    fs.readFile(imageDirectory + id + "." + ext, function(err, data){
+    var filePath = imageDirectory + id + "." + ext;
+    if(req.originalUrl.indexOf('shared')!=-1){
+            filePath = '/shared/'+id+"."+ext;
+    }
+    fs.readFile(filePath, function(err, data){
         if(err){
             if(err.code === 'ENOENT'){
                 sendNotFoundError(req,res);
@@ -277,7 +293,12 @@ exports.showThumbnail = function(req, res){
     var ext = req.params.ext;
     var img = imageDirectory + id + "." + ext;
 
-    fs.readFile(imageDirectory + id + "." + ext, function(err, data){
+    var filePath = imageDirectory + id + "." + ext;
+    if(req.originalUrl.indexOf('shared')!=-1){
+                img = '/shared/'+id+"."+ext;
+    }
+
+    fs.readFile(img, function(err, data){
         if(err){
             if(err.code === 'ENOENT'){
                 sendNotFoundError(req,res);
@@ -287,33 +308,40 @@ exports.showThumbnail = function(req, res){
         }        
 
         else{
-            gm(img).resize(thumbnailSize).stream(function streamOut (err, stdout, stderr) {
-                switch(ext)
-                {
-                    case 'gif':
-                        res.writeHead(200, {'Content-Type':'image/gif'});
-                        break;
-                    case 'jpg':
-                        res.writeHead(200, {'Content-Type':'image/jpg'});
-                        break;
-                    case 'jpeg':
-                        res.writeHead(200, {'Content-Type':'image/jpeg'});
-                        break;
-                    case 'png':
-                        res.writeHead(200, {'Content-Type':'image/png'});
-                        break;
-                    case 'bmp':
-                        res.writeHead(200, {'Content-Type':'image/bmp'});
-                        break;
-                    default:
-                        console.log("Image type may not be supported.");
-                        res.writeHead(200, {'Content-Type':'image/jpg'});
-                }
-                var piping = stdout.pipe(res);
+            var width, height, ratio;
+            gm(img).size(function(err, val) {
+                width = val.width;
+                height = val.height;
+                ratio = thumbnailSize/width;
 
-                piping.on('finish', function(){
-                    res.end();
-                })
+                gm(img).thumbnail(thumbnailSize, ratio*height).gravity('Center').stream(function streamOut (err, stdout, stderr) {
+                    switch(ext)
+                    {
+                        case 'gif':
+                            res.writeHead(200, {'Content-Type':'image/gif'});
+                            break;
+                        case 'jpg':
+                            res.writeHead(200, {'Content-Type':'image/jpg'});
+                            break;
+                        case 'jpeg':
+                            res.writeHead(200, {'Content-Type':'image/jpeg'});
+                            break;
+                        case 'png':
+                            res.writeHead(200, {'Content-Type':'image/png'});
+                            break;
+                        case 'bmp':
+                            res.writeHead(200, {'Content-Type':'image/bmp'});
+                            break;
+                        default:
+                            console.log("Image type may not be supported.");
+                            res.writeHead(200, {'Content-Type':'image/jpg'});
+                    }
+                    var piping = stdout.pipe(res);
+
+                    piping.on('finish', function(){
+                        res.end();
+                    })
+                });
             });
         }
     });
