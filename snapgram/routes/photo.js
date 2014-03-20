@@ -53,7 +53,7 @@ exports.addPhotoToTable = function(req, res, next){
     }
     else{
         var nameArray = req.files.image.name.split('.');
-        var ext = nameArray[nameArray.length - 1];
+        var ext = nameArray[nameArray.length - 1].toLowerCase();
 
         if(ext === 'jpg' || ext === 'jpeg' || ext === 'gif' || ext === 'bmp' || ext === 'png'){
             req.upload_time = (new Date()/1);
@@ -222,7 +222,7 @@ exports.create = function(req, res){
     });
 
     //split the url into an array and then get the last chunk and render it out in the send req.
-    var pathArray = req.files.image.path.split( '\\' );
+    var pathArray = req.files.image.path.split( '\/' );
     fs.rename(req.files.image.path, req.files.image.path.replace(pathArray[pathArray.length-1], req.photo_path));
     res.status(302);
     res.render('upload', {

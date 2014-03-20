@@ -18,6 +18,8 @@
 	"mysql":"*",
     "underscore":"*",
     "crypto":"*",
-	"gm": "*"
+	"gm": "*",
+    "chai": "*",
+    "mocha": "*"
   }
 }
