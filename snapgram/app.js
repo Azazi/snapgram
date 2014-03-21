@@ -83,7 +83,13 @@ var queries = ['DROP TABLE IF EXISTS Users, Photos, Follows, Streams',
 queries.forEach(function(queryString){
     conn.query(queryString, function (err, rows, fields){
         if(err) throw err;
-        else console.log('query successful\t' + new Date());
+        else{ 
+            if(queryString.indexOf('DROP')!=-1) console.log('Database Cleared!');
+            else if(queryString.indexOf('Users')!=-1 && queryString.indexOf('INSERT')==-1) console.log('Table Users Created!');
+            else if(queryString.indexOf('Photos')!=-1 && queryString.indexOf('INSERT')==-1) console.log('Table Photos Created!');
+            else if(queryString.indexOf('Follows')!=-1 && queryString.indexOf('INSERT')==-1) console.log('Table Follows Created!');
+            else if(queryString.indexOf('Streams')!=-1 && queryString.indexOf('INSERT')==-1) console.log('Table Streams Created!');
+        }
     });                
 });
 

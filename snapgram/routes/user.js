@@ -113,12 +113,14 @@ exports.show = function(req, res){
         }
     });
     console.log("USER DOES EXIST");
-    req.conn.query("SELECT * FROM Photos WHERE owner_id = '" + req.params.id + "'", function (err, photos, fields){
+
+    var uname = results[0].user_name;
+    req.conn.query("SELECT * FROM Streams a, Users c, Photos b WHERE a.stream_id = '" + results[0].user_id + "' AND a.photo_id = b.photo_id AND c.user_id = '" + results[0].user_id + "'", function (err, photos, fields){
         if(err){
             sendInternalServerError(req, res);
         }
         else{
-            console.log(photos);
+            //console.log(results);
             res.status(200);
             res.render('user', {
                 title: 'User Stream',
@@ -131,10 +133,31 @@ exports.show = function(req, res){
                 uid: req.params.id,
                 myuid: req.myuid
             });
-            //send photos to view for user/:id and render them
         }
     });
-};
+
+    //req.conn.query("SELECT * FROM Photos WHERE owner_id = '" + req.params.id + "'", function (err, photos, fields){
+    //    if(err){
+    //        sendInternalServerError(req, res);
+    //    }
+    //    else{
+    //        console.log(photos);
+    //        res.status(200);
+    //        res.render('user', {
+    //            title: 'User Stream',
+    //            logged_in: true,
+    //            sid: req.cookies.sid,
+    //            user_name: uname,
+    //            stream: photos,
+    //            page: req.query.page,
+    //            follows: req.follows,
+    //            uid: req.params.id,
+    //            myuid: req.myuid
+    //        });
+    //        //send photos to view for user/:id and render them
+    //    }
+    //});
+}
 
 exports.follow = function(req, res){
     req.conn.query("SELECT user_id FROM Users WHERE sid = '" + req.cookies.sid + "'", function (err, user_ids, fields){

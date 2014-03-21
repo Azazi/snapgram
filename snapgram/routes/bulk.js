@@ -17,7 +17,13 @@ exports.clear = function(req, res){
                     sendInternalServerError(req,res);
                     return;
                 }
-                else console.log('query successful\t' + new Date());
+                else{
+                    if(queryString.indexOf('DROP')!=-1) console.log('Database Cleared!');
+                    else if(queryString.indexOf('Users')!=-1) console.log('Table Users Created!');
+                    else if(queryString.indexOf('Photos')!=-1) console.log('Table Photos Created!');
+                    else if(queryString.indexOf('Follows')!=-1) console.log('Table Follows Created!');
+                    else if(queryString.indexOf('Streams')!=-1) console.log('Table Streams Created!');
+                }
             });
         });
         res.status(200).send('DB cleared');
@@ -29,14 +35,21 @@ exports.clear = function(req, res){
 
 exports.users = function(req, res){
     if(req.query.password === secret_password){
+        var processedUsers = 0;
         var index = 1;
+        /// Logging
+        console.log('Started processing users...');
         req.body.users.forEach(function(user){
+            /// Logging
+            console.log('Processing user: ', user.id);
+
             req.conn.query("SELECT * FROM Users WHERE user_id = '" + user.id +"'", function (err, match_results){
                 if(err){
                     sendInternalServerError(req,res);
                 }
                 if(match_results.length > 0){
-                    //do nothing, user_id already exists
+                    /// Logging
+                    /// do nothing, user_id already exists
                     console.log('User: ',user.name, ' already exists');
                 }
                 else{
@@ -44,14 +57,15 @@ exports.users = function(req, res){
                     req.conn.query("INSERT INTO Users (name, user_name, password) VALUES ('" + user.name + "', '" + user.id + "', '" + crypto.createHash('md5').update(user.password.toString()).digest('hex') + "')", function (err, results, fields){
                         if(err){
                             sendInternalServerError(req,res);
-                            return;
                         }
                         else{
+                            var finishedUser = false;
+                            var followsCounter = 0;
                             user.follows.forEach(function(followee){
+                                followsCounter++;
                                 req.conn.query("SELECT * FROM Follows WHERE follower_id = '" + user.id + "' AND followee_id = '" + followee + "'", function (err, follows_results, fields){
                                     if(err){
                                         sendInternalServerError(req,res);
-                                        return;
                                     }
                                     else{
                                         if(follows_results.length > 0){
@@ -65,22 +79,27 @@ exports.users = function(req, res){
                                                     return;
                                                 }
                                                 else{
-                                                    console.log('Successfully processed user ', user.user_name);
+                                                    if(followsCounter===user.follows.length && !finishedUser){
+                                                        finishedUser = true;
+                                                        processedUsers++;
+                                                        console.log('Successfully processed user: ', user.id);
+                                                    }
                                                 }
                                             });
                                         }
                                     }
                                 });
-                            })
+                            });
                         }
                     });
                 }
             });
             index++;
+            if(index>req.body.users.length && processedUsers == req.body.users.length){
+                console.log('Inserted all users.');
+            }
         });
-
-        console.log('Inserted all users.');
-        res.status(200).send('Inserted all users');
+        res.status(200).send('Request received! Processing users');
     }
     else{
         console.log("Password didn't match!");
@@ -121,7 +140,13 @@ exports.logEverything = function(req, res){
 
 exports.streams = function(req, res){
     if(req.query.password == secret_password){
+        /// Logging 
+        console.log('Started processing photos...');
+
         req.body.streams.forEach(function(photo){
+            ///Logging
+            console.log('Processing photo: ', photo.id);
+
             req.conn.query("SELECT * FROM Photos WHERE photo_path = '" + photo.path + "'", function(err, photos_results){
                 if(err){
                     sendInternalServerError(req,res);
@@ -149,7 +174,7 @@ exports.streams = function(req, res){
                                                         sendInternalServerError(req,res);
                                                     }
                                                     else{
-                                                        console.log('inserted photo: ', photo);
+                                                        console.log('Successfully processed photo: ', photo.id);
                                                     }
                                                 });
                                             }
@@ -167,20 +192,19 @@ exports.streams = function(req, res){
                                                         sendInternalServerError(req,res);
                                                     }
                                                     else{
-                                                        console.log('inserted photo: ', photo);
+                                                        console.log('Successfully processed photo: ', photo.id);
                                                     }
                                                 });
                                             }
                                         });
                                     }
-                                    }
-                            });
+                            }
+                        });
                     }
                 }
             })
         });
         res.status(200).send('Inserted all photos.');
-        console.log('Inserted all photos.');
     }
     else{
         res.status(302).send("Incorrect password specified.");
