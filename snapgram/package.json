@@ -20,6 +20,9 @@
     "crypto":"*",
 	"gm": "*",
     "chai": "*",
-    "mocha": "*"
+    "mocha": "*",
+    "should": "*",
+    "zombie": "*",
+    "tough-cookie": "*"
   }
 }

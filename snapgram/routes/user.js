@@ -247,6 +247,8 @@ function sendInternalServerError(req, res){
     return;
 }
 
+exports.sendInternalServerError = sendInternalServerError;
+
 function sendNotFoundError(req,res){
     // Reply with ERROR 404
     res.status(404);
