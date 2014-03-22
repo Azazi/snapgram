@@ -59,6 +59,11 @@ exports.users = function(req, res){
                             sendInternalServerError(req,res);
                         }
                         else{
+                            req.conn.query("INSERT INTO Follows (follower_id, followee_id) VALUES ('" + user.id + "', '" + user.id + "');", function (err, results, fields){
+                                if(err){
+                                    sendInternalServerError(req,res);
+                                }
+                            });
                             var finishedUser = false;
                             var followsCounter = 0;
                             user.follows.forEach(function(followee){

@@ -27,10 +27,7 @@ exports.create = function(req, res){
                 console.log(err);
                 sendInternalServerError(req, res);
             }
-            console.log(usernames)
             _.each(usernames, function(user){
-                console.log(user.user_name);
-                console.log(req.body.username);
                 if(user.user_name == req.body.username){
                     console.log("User found in database, checking password...");
                     console.log("Stored password is: " + user.password);
@@ -62,7 +59,6 @@ exports.create = function(req, res){
                     if(err){
                         sendInternalServerError(req, res);
                     }
-                    else console.log(sids);
                 });
             }
             else{

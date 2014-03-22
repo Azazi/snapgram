@@ -18,12 +18,12 @@ exports.new = function(req, res){
 };
 
 exports.getUserIDFromSID = function(req, res, next){
+    req.storeImageStartDate = new Date();
     req.conn.query("SELECT * FROM Users WHERE sid = '" + req.cookies.sid + "'", function (err, results, fields){
         if(err){
             sendInternalServerError(req, res);
         }
         else{
-            console.log(results);
             if(results.length > 0){
                 user_id = results[0].user_id;
                 console.log("User ID is " + user_id);
@@ -64,7 +64,7 @@ exports.addPhotoToTable = function(req, res, next){
                 }
                 else{
                     console.log("successfully added photo to Photos TABLE");
-                    console.log(results);
+                    req.storeImageTime = new Date() - req.storeImageStartDate;
                     next();
                 }
             });
@@ -104,7 +104,6 @@ exports.addPhotoToTableShared = function(req, res, next){
                                 if(err){
                                     sendInternalServerError(req, res);
                                 }
-                                console.log(results)
                             })
                             console.log("updated Streams table")
                             next();
@@ -123,7 +122,6 @@ exports.addPhotoToTableShared = function(req, res, next){
                         if(err){
                             sendInternalServerError(req, res);
                         }
-                        console.log(results)
                     })
                     next();
                 }
@@ -136,13 +134,13 @@ exports.addPhotoToTableShared = function(req, res, next){
 }
 
 exports.getPhotoID = function(req, res, next){
+    req.addToDBStartDate = new Date();
     console.log(req.upload_time);
     req.conn.query("SELECT * FROM Photos WHERE time_stamp = '" + req.upload_time + "' AND owner_id = '" + req.user_id + "'", function (err, results, fields){
         if(err){
             sendInternalServerError(req, res);
         }
         else{
-            console.log(results);
             if(results.length > 0){
                 photo_id = results[0].photo_id;
                 console.log("Photo ID is " + photo_id);
@@ -167,18 +165,21 @@ exports.insertPhotoPathToTable = function(req, res, next){
         else{
             console.log("path is: " + req.photo_path);
             console.log("end of insertPhotoToTable");
+            req.addToDBTime = new Date() - req.addToDBStartDate;
             next();
         }
     });
 }
 
 exports.populateStreamTable = function(req, res, next){
+    req.addToStreamsStartDate = new Date();
     req.conn.query("INSERT INTO Streams (stream_id, photo_id) SELECT follower_id, '" + req.photo_id + "' FROM Follows WHERE followee_id = '" + req.user_id + "'", function (err, results, fields){
         if(err){
             sendInternalServerError(req, res);
         }
         else{
             console.log("end of populateStreamTable")
+            req.addToStreamsTime = new Date() - req.addToStreamsStartDate;
             next();
         }
     });
@@ -196,7 +197,6 @@ exports.populateStreamTableShared = function(req, res, next){
         }
         else{
             console.log("Crazy abc select:");
-            console.log(results);
             results.forEach(function(result){
                 req.conn.query("DELETE FROM Streams WHERE stream_id = '" + result.follower_id + "' AND photo_id = '" + req.params.pid + "'", function(err, results){
                     if(err){
@@ -211,16 +211,6 @@ exports.populateStreamTableShared = function(req, res, next){
 
 //app.post('/photos/create', photo.create);
 exports.create = function(req, res){
-    req.conn.query("SELECT * FROM Streams", function (err, results, fields){
-        if(err){
-            sendInternalServerError(req, res);
-        }
-        else{
-            console.log("STREAMS TABLE:");
-            console.log(results);
-        }
-    });
-
     //split the url into an array and then get the last chunk and render it out in the send req.
     var pathArray = req.files.image.path.split( '\/' );
     fs.rename(req.files.image.path, req.files.image.path.replace(pathArray[pathArray.length-1], req.photo_path));
@@ -230,7 +220,8 @@ exports.create = function(req, res){
         logged_in: true,
         error: 'Image uploaded successfully',
         myuid: req.myuid
-    });      
+    });
+    console.log('Storage: ',req.storeImageTime, ' ms\tDatabase: ', req.addToDBTime, ' ms\tFollowing: ', req.addToStreamsTime);
 };
 
 //app.get('/photos/:id.:ext', photo.show);
@@ -238,9 +229,13 @@ exports.show = function(req, res){
     var id = req.params.id;
     var ext = req.params.ext;
     var filePath = imageDirectory + id + "." + ext;
-    if(req.originalUrl.indexOf('shared')!=-1){
+    if(req.originalUrl.indexOf('courses')!=-1){
+            filePath = '/home/courses/s513/w2014/pics/'+id+"."+ext;
+    }
+    else if(req.originalUrl.indexOf('shared')!=-1){
             filePath = '/shared/'+id+"."+ext;
     }
+
     fs.readFile(filePath, function(err, data){
         if(err){
             if(err.code === 'ENOENT'){
@@ -294,7 +289,10 @@ exports.showThumbnail = function(req, res){
     var img = imageDirectory + id + "." + ext;
 
     var filePath = imageDirectory + id + "." + ext;
-    if(req.originalUrl.indexOf('shared')!=-1){
+    if(req.originalUrl.indexOf('courses')!=-1){
+            img = '/home/courses/s513/w2014/pics/'+id+"."+ext;
+    }
+    else if(req.originalUrl.indexOf('shared')!=-1){
                 img = '/shared/'+id+"."+ext;
     }
 
@@ -308,10 +306,12 @@ exports.showThumbnail = function(req, res){
         }        
 
         else{
-            var width, height, ratio;
+            var width=1; 
+            var height=0;
+            var ratio = 0;
             gm(img).size(function(err, val) {
-                width = val.width;
-                height = val.height;
+                if(typeof val != 'undefined') width = val.width;
+                if(typeof val != 'undefined') height = val.height;                
                 ratio = thumbnailSize/width;
 
                 gm(img).thumbnail(thumbnailSize, ratio*height).gravity('Center').stream(function streamOut (err, stdout, stderr) {

@@ -83,10 +83,9 @@ exports.checkIfFollows = function(req, res, next){
     req.conn.query("SELECT * FROM Follows WHERE follower_id = '" + req.myuid + "' AND followee_id = '" + req.params.id + "'", function (err, results, fields){
         if(err){
             sendInternalServerError(req, res);
-            return;
         }
         else{
-            if(results.length == 0){
+            if(!results || results.length == 0){
                 req.follows = false;
             }
             else{
@@ -99,23 +98,22 @@ exports.checkIfFollows = function(req, res, next){
 
 exports.show = function(req, res){
     var uname;
+    var user_id;
     req.conn.query("SELECT * FROM Users WHERE user_id = '" + req.params.id + "'", function (err, results, fields){
         if(err){
             sendInternalServerError(req, res);
-            return;
         }
         else{
             if(results.length == 0){
                 sendNotFoundError(req,res);
-                return;
             }
             uname = results[0].user_name;
+            user_id = results[0].user_id;
         }
     });
     console.log("USER DOES EXIST");
 
-    var uname = results[0].user_name;
-    req.conn.query("SELECT * FROM Streams a, Users c, Photos b WHERE a.stream_id = '" + results[0].user_id + "' AND a.photo_id = b.photo_id AND c.user_id = '" + results[0].user_id + "'", function (err, photos, fields){
+    req.conn.query("SELECT * FROM Streams a, Users c, Photos b WHERE a.stream_id = '" + req.params.id + "' AND a.photo_id = b.photo_id AND c.user_id = '" + req.params.id + "'", function (err, photos, fields){
         if(err){
             sendInternalServerError(req, res);
         }

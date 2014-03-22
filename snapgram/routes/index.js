@@ -16,7 +16,6 @@ exports.index = function(req, res){
                         sendInternalServerError(req, res);
                     }
                     else{
-                        console.log(results);
                         res.status(200);
                         res.render('index', {
                             title: 'Welcome to Snapgram',

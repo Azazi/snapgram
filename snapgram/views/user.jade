@@ -138,6 +138,6 @@ block content
 							tr(border='0', padding-bottom='50')			
 							td(align='center', valign='center', border='0')
 										-page++
-										-var newPage = '/feed?page=' + page.toString()
+										-var newPage = '/users/'+ uid +'?page=' + page.toString()
 										a(href='#{newPage}').btn.btn-primary Next »
 					-}

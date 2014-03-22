@@ -824,6 +824,9 @@
     <Compile Include="routes\photo.js" />
     <Compile Include="routes\session.js" />
     <Compile Include="routes\user.js" />
+    <Compile Include="test\functionalTests.js" />
+    <Compile Include="test\integrationTest.js" />
+    <Compile Include="test\unitTests.js" />
     <Content Include="images\7284-1a9m1h2" />
     <Content Include="images\bootstrap-theme.min.css" />
     <Content Include="images\cat1.jpg" />
@@ -1692,6 +1695,7 @@
     <Folder Include="public\stylesheets\" />
     <Folder Include="public\stylesheets\css\" />
     <Folder Include="routes\" />
+    <Folder Include="test\" />
     <Folder Include="views\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />

@@ -80,18 +80,18 @@ var queries = ['DROP TABLE IF EXISTS Users, Photos, Follows, Streams',
     "INSERT INTO Follows (follower_id, followee_id) VALUES ('3', '3')",
     "INSERT INTO Follows (follower_id, followee_id) VALUES ('4', '4')",
     "INSERT INTO Follows (follower_id, followee_id) VALUES ('5', '5')"]
-queries.forEach(function(queryString){
-    conn.query(queryString, function (err, rows, fields){
-        if(err) throw err;
-        else{ 
-            if(queryString.indexOf('DROP')!=-1) console.log('Database Cleared!');
-            else if(queryString.indexOf('Users')!=-1 && queryString.indexOf('INSERT')==-1) console.log('Table Users Created!');
-            else if(queryString.indexOf('Photos')!=-1 && queryString.indexOf('INSERT')==-1) console.log('Table Photos Created!');
-            else if(queryString.indexOf('Follows')!=-1 && queryString.indexOf('INSERT')==-1) console.log('Table Follows Created!');
-            else if(queryString.indexOf('Streams')!=-1 && queryString.indexOf('INSERT')==-1) console.log('Table Streams Created!');
-        }
-    });                
-});
+//queries.forEach(function(queryString){
+//    conn.query(queryString, function (err, rows, fields){
+//        if(err) throw err;
+//        else{ 
+//            if(queryString.indexOf('DROP')!=-1) console.log('Database Cleared!');
+//            else if(queryString.indexOf('Users')!=-1 && queryString.indexOf('INSERT')==-1) console.log('Table Users Created!');
+//            else if(queryString.indexOf('Photos')!=-1 && queryString.indexOf('INSERT')==-1) console.log('Table Photos Created!');
+//            else if(queryString.indexOf('Follows')!=-1 && queryString.indexOf('INSERT')==-1) console.log('Table Follows Created!');
+//            else if(queryString.indexOf('Streams')!=-1 && queryString.indexOf('INSERT')==-1) console.log('Table Streams Created!');
+//        }
+//    });                
+//});
 
 /// Close the connection after creating the tables
 //conn.end();
@@ -150,8 +150,10 @@ app.get('/photos/new', checkAuth, photo.new);
 app.post('/photos/create', checkAuth, appendConn, photo.getUserIDFromSID, photo.addPhotoToTable, photo.getPhotoID, photo.insertPhotoPathToTable, photo.populateStreamTable, photo.create);
 app.get('/photos/thumbnail/:id.:ext', checkAuth,  photo.showThumbnail);
 app.get('/photos/thumbnail/shared/:id.:ext', checkAuth,  photo.showThumbnail);
-app.get('/photos/:id.:ext', checkAuth, photo.show); 
-app.get('/photos/shared/:id.:ext', checkAuth, photo.show); 
+app.get('/photos/thumbnail/home/courses/s513/w2014/pics/:id.:ext', checkAuth,  photo.showThumbnail);
+app.get('/photos/:id.:ext', checkAuth, photo.show);
+app.get('/photos/shared/:id.:ext', checkAuth, photo.show);
+app.get('/photos/home/courses/s513/w2014/pics/:id.:ext', checkAuth, photo.show);
 app.get('/photos/share/:pid', checkAuth, appendConn, photo.getUserIDFromSID, photo.addPhotoToTableShared, photo.getPhotoID, photo.populateStreamTableShared, photo.populateStreamTable, photo.redirect);
 
 app.get('/bulk/clear', appendConn, bulk.clear);
@@ -174,7 +176,7 @@ function checkAuth(req, res, next) {
                 res.redirect('/sessions/new?redir='+req.url, 302);
             }
             else{
-                console.log(sids[0]);
+                console.log('User: ', sids[0].user_name);
                 req.username = sids[0].user_name;
                 req.myuid = sids[0].user_id;
                 next();
