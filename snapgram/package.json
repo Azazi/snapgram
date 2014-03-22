@@ -23,6 +23,7 @@
     "mocha": "*",
     "should": "*",
     "zombie": "*",
-    "tough-cookie": "*"
+    "tough-cookie": "*",
+	"request": "*"
   }
 }
