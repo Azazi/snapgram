@@ -18,7 +18,7 @@ var conn = mysql.createConnection({
 });
 
 describe("Redirect Checks", function(){
-    var hostname = 'localhost';
+    var hostname = 'node.cs.ucalgary.ca';
 
     it("should redirect to login if trying to access /feed while not logged in", function(done){
         createUserTableIfNotExist();

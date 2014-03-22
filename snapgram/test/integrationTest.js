@@ -23,7 +23,7 @@ var conn = mysql.createConnection({
 
 describe("integration testing", function() {
     var browser = new Browser();
-    var hostname = "http://localhost:8550"
+    var hostname = "http://node.cs.ucalgary.ca:8550"
     var cookieString = "";
     it("should load the home page", function(done) {
         browser

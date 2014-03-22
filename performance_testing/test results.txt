@@ -1,0 +1,1290 @@
+############################################################################################################################
+										LOGIN	CORRECT
+############################################################################################################################
+
+29 ms
+24 ms
+41 ms
+17 ms
+18 ms
+23 ms
+149 ms
+74 ms
+18 ms
+85 ms
+
+mean	47.8 ms
+
+############################################################################################################################
+										LOGIN	INCORRECT
+############################################################################################################################
+
+210 ms
+265 ms
+88 ms
+155 ms
+79 ms
+72 ms
+78 ms
+121 ms
+66 ms
+68 ms
+
+mean	120.2 ms
+
+############################################################################################################################
+										FEED	I FIXED		C VARIABLE
+############################################################################################################################
+ab -n 100 -c 10 -C sid=0f80c668f47834c801c6893704ef5f97 http://node.cs.ucalgary.ca:8550/ USER 1 PAGE 1 IMAGES 30
+############################################################################################################################
+ 
+Server Software:
+Server Hostname:        node.cs.ucalgary.ca
+Server Port:            8550
+
+Document Path:          /
+Document Length:        24718 bytes
+
+Concurrency Level:      10
+Time taken for tests:   54.955038 seconds
+Complete requests:      100
+Failed requests:        0
+Write errors:           0
+Total transferred:      2501798 bytes
+HTML transferred:       2471800 bytes
+Requests per second:    1.82 [#/sec] (mean)
+Time per request:       5495.504 [ms] (mean)
+Time per request:       549.550 [ms] (mean, across all concurrent requests)
+Transfer rate:          44.45 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.5      0       1
+Processing:  3678 5271 1047.1   5084    9340
+Waiting:     3677 5269 1047.1   5082    9338
+Total:       3679 5272 1047.1   5084    9340
+
+Percentage of the requests served within a certain time (ms)
+  50%   5084
+  66%   5500
+  75%   5624
+  80%   5892
+  90%   6712
+  95%   7341
+  98%   8830
+  99%   9340
+ 100%   9340 (longest request)
+ 
+##############################################################
+ab -n 100 -c 20 -C sid=0f80c668f47834c801c6893704ef5f97 http://node.cs.ucalgary.ca:8550/ USER 1 PAGE 1 IMAGES 30
+##############################################################
+
+Server Software:
+Server Hostname:        node.cs.ucalgary.ca
+Server Port:            8550
+
+Document Path:          /
+Document Length:        24748 bytes
+
+Concurrency Level:      20
+Time taken for tests:   54.24912 seconds
+Complete requests:      100
+Failed requests:        0
+Write errors:           0
+Total transferred:      2504672 bytes
+HTML transferred:       2474800 bytes
+Requests per second:    1.85 [#/sec] (mean)
+Time per request:       10804.983 [ms] (mean)
+Time per request:       540.249 [ms] (mean, across all concurrent requests)
+Transfer rate:          45.26 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.5      0       1
+Processing:  3431 9965 1781.5  10213   13881
+Waiting:     3428 9963 1781.5  10210   13878
+Total:       3431 9965 1781.6  10213   13881
+
+Percentage of the requests served within a certain time (ms)
+  50%  10213
+  66%  10437
+  75%  10891
+  80%  11341
+  90%  11580
+  95%  12132
+  98%  13347
+  99%  13881
+ 100%  13881 (longest request)
+
+##############################################################
+ab -n 100 -c 30 -C sid=0f80c668f47834c801c6893704ef5f97 http://node.cs.ucalgary.ca:8550/ USER 1 PAGE 1 IMAGES 30
+##############################################################
+
+Server Software:
+Server Hostname:        node.cs.ucalgary.ca
+Server Port:            8550
+
+Document Path:          /
+Document Length:        24748 bytes
+
+Concurrency Level:      30
+Time taken for tests:   52.383733 seconds
+Complete requests:      100
+Failed requests:        0
+Write errors:           0
+Total transferred:      2504750 bytes
+HTML transferred:       2474800 bytes
+Requests per second:    1.91 [#/sec] (mean)
+Time per request:       15715.120 [ms] (mean)
+Time per request:       523.837 [ms] (mean, across all concurrent requests)
+Transfer rate:          46.69 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.6      0       3
+Processing:  1243 13715 4238.4  14326   17792
+Waiting:     1241 13713 4238.4  14324   17790
+Total:       1244 13715 4238.3  14327   17792
+
+Percentage of the requests served within a certain time (ms)
+  50%  14327
+  66%  15991
+  75%  17203
+  80%  17635
+  90%  17741
+  95%  17765
+  98%  17780
+  99%  17792
+ 100%  17792 (longest request)
+ 
+##############################################################
+ab -n 100 -c 40 -C sid=0f80c668f47834c801c6893704ef5f97 http://node.cs.ucalgary.ca:8550/ USER 1 PAGE 1 IMAGES 30
+##############################################################
+
+Server Software:
+Server Hostname:        node.cs.ucalgary.ca
+Server Port:            8550
+
+Document Path:          /
+Document Length:        24748 bytes
+
+Concurrency Level:      40
+Time taken for tests:   56.523202 seconds
+Complete requests:      100
+Failed requests:        0
+Write errors:           0
+Total transferred:      2504786 bytes
+HTML transferred:       2474800 bytes
+Requests per second:    1.77 [#/sec] (mean)
+Time per request:       22609.280 [ms] (mean)
+Time per request:       565.232 [ms] (mean, across all concurrent requests)
+Transfer rate:          43.27 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.4      0       1
+Processing:  2647 18310 6356.0  20633   24236
+Waiting:     2644 18308 6356.1  20631   24233
+Total:       2647 18310 6356.0  20634   24236
+
+Percentage of the requests served within a certain time (ms)
+  50%  20634
+  66%  22902
+  75%  23080
+  80%  23341
+  90%  23790
+  95%  23951
+  98%  24178
+  99%  24236
+ 100%  24236 (longest request)
+
+##############################################################
+ab -n 100 -c 50 -C sid=0f80c668f47834c801c6893704ef5f97 http://node.cs.ucalgary.ca:8550/ USER 1 PAGE 1 IMAGES 30
+##############################################################
+
+Server Software:
+Server Hostname:        node.cs.ucalgary.ca
+Server Port:            8550
+
+Document Path:          /
+Document Length:        24748 bytes
+
+Concurrency Level:      50
+Time taken for tests:   58.187522 seconds
+Complete requests:      100
+Failed requests:        0
+Write errors:           0
+Total transferred:      2504727 bytes
+HTML transferred:       2474800 bytes
+Requests per second:    1.72 [#/sec] (mean)
+Time per request:       29093.761 [ms] (mean)
+Time per request:       581.875 [ms] (mean, across all concurrent requests)
+Transfer rate:          42.04 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.5      0       1
+Processing:  1928 22071 8654.9  27181   29895
+Waiting:     1926 22069 8654.8  27177   29893
+Total:       1928 22071 8654.8  27181   29895
+
+Percentage of the requests served within a certain time (ms)
+  50%  27181
+  66%  28261
+  75%  28514
+  80%  28562
+  90%  29144
+  95%  29231
+  98%  29380
+  99%  29895
+ 100%  29895 (longest request)
+
+############################################################################################################################
+										PHOTO UPLOAD	F FIXED		C VARIABLE
+############################################################################################################################
+ab -n 100 -c 1 -C sid=147bb7c5be5c2317449421da2a3d69e7 -p post_data.txt -T "multipart/form-data; boundary=1234567890" http://node.cs.ucalgary.ca:8550/photos/create USER 2 FOLLOWERS 99
+############################################################################################################################
+
+Server Software:
+Server Hostname:        node.cs.ucalgary.ca
+Server Port:            8550
+
+Document Path:          /photos/create
+Document Length:        2395 bytes
+
+Concurrency Level:      1
+Time taken for tests:   236.838377 seconds
+Complete requests:      100
+Failed requests:        0
+Write errors:           0
+Non-2xx responses:      100
+Total transferred:      268886 bytes
+Total POSTed:           2537700
+HTML transferred:       239500 bytes
+Requests per second:    0.42 [#/sec] (mean)
+Time per request:       2368.384 [ms] (mean)
+Time per request:       2368.384 [ms] (mean, across all concurrent requests)
+Transfer rate:          1.11 [Kbytes/sec] received
+                        10.46 kb/s sent
+                        11.57 kb/s total
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    2   3.5      0      11
+Processing:   212 2365 1194.7   2461    4442
+Waiting:      212 2362 1193.9   2460    4437
+Total:        212 2367 1195.0   2469    4442
+
+Percentage of the requests served within a certain time (ms)
+  50%   2469
+  66%   3074
+  75%   3374
+  80%   3551
+  90%   3946
+  95%   4297
+  98%   4333
+  99%   4442
+ 100%   4442 (longest request)
+
+##############################################################
+ab -n 100 -c 10 -C sid=147bb7c5be5c2317449421da2a3d69e7 -p post_data.txt -T "multipart/form-data; boundary=1234567890" http://node.cs.ucalgary.ca:8550/photos/create USER 2 FOLLOWERS 99
+##############################################################
+
+Server Software:
+Server Hostname:        node.cs.ucalgary.ca
+Server Port:            8550
+
+Document Path:          /photos/create
+Document Length:        2395 bytes
+
+Concurrency Level:      10
+Time taken for tests:   13.43688 seconds
+Complete requests:      100
+Failed requests:        0
+Write errors:           0
+Non-2xx responses:      100
+Total transferred:      268864 bytes
+Total POSTed:           2537700
+HTML transferred:       239500 bytes
+Requests per second:    7.67 [#/sec] (mean)
+Time per request:       1304.369 [ms] (mean)
+Time per request:       130.437 [ms] (mean, across all concurrent requests)
+Transfer rate:          20.09 [Kbytes/sec] received
+                        189.99 kb/s sent
+                        210.12 kb/s total
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.7      0       3
+Processing:   850 1250 581.2    986    3582
+Waiting:      850 1250 581.2    985    3581
+Total:        851 1251 581.5    986    3583
+
+Percentage of the requests served within a certain time (ms)
+  50%    986
+  66%   1194
+  75%   1325
+  80%   1360
+  90%   2292
+  95%   2813
+  98%   3500
+  99%   3583
+ 100%   3583 (longest request)
+ 
+##############################################################
+ab -n 100 -c 20 -C sid=147bb7c5be5c2317449421da2a3d69e7 -p post_data.txt -T "multipart/form-data; boundary=1234567890" http://node.cs.ucalgary.ca:8550/photos/create USER 2 FOLLOWERS 99
+##############################################################
+
+Server Software:
+Server Hostname:        node.cs.ucalgary.ca
+Server Port:            8550
+
+Document Path:          /photos/create
+Document Length:        2395 bytes
+
+Concurrency Level:      20
+Time taken for tests:   12.100620 seconds
+Complete requests:      100
+Failed requests:        0
+Write errors:           0
+Non-2xx responses:      100
+Total transferred:      268878 bytes
+Total POSTed:           2537700
+HTML transferred:       239500 bytes
+Requests per second:    8.26 [#/sec] (mean)
+Time per request:       2420.124 [ms] (mean)
+Time per request:       121.006 [ms] (mean, across all concurrent requests)
+Transfer rate:          21.65 [Kbytes/sec] received
+                        204.80 kb/s sent
+                        226.50 kb/s total
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   1.3      0       5
+Processing:  1376 2278 340.7   2300    3192
+Waiting:     1376 2277 340.7   2299    3192
+Total:       1377 2278 340.7   2300    3196
+
+Percentage of the requests served within a certain time (ms)
+  50%   2300
+  66%   2450
+  75%   2558
+  80%   2570
+  90%   2656
+  95%   2796
+  98%   3135
+  99%   3196
+ 100%   3196 (longest request)
+ 
+##############################################################
+ab -n 100 -c 30 -C sid=147bb7c5be5c2317449421da2a3d69e7 -p post_data.txt -T "multipart/form-data; boundary=1234567890" http://node.cs.ucalgary.ca:8550/photos/create USER 2 FOLLOWERS 99
+##############################################################
+
+Server Software:
+Server Hostname:        node.cs.ucalgary.ca
+Server Port:            8550
+
+Document Path:          /photos/create
+Document Length:        2395 bytes
+
+Concurrency Level:      30
+Time taken for tests:   12.901721 seconds
+Complete requests:      100
+Failed requests:        0
+Write errors:           0
+Non-2xx responses:      100
+Total transferred:      268860 bytes
+Total POSTed:           2537700
+HTML transferred:       239500 bytes
+Requests per second:    7.75 [#/sec] (mean)
+Time per request:       3870.516 [ms] (mean)
+Time per request:       129.017 [ms] (mean, across all concurrent requests)
+Transfer rate:          20.31 [Kbytes/sec] received
+                        192.08 kb/s sent
+                        212.44 kb/s total
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   1.6      0       5
+Processing:  1935 3506 646.9   3690    4407
+Waiting:     1935 3506 647.0   3690    4407
+Total:       1936 3507 646.6   3691    4411
+
+Percentage of the requests served within a certain time (ms)
+  50%   3691
+  66%   3889
+  75%   3919
+  80%   4066
+  90%   4210
+  95%   4236
+  98%   4328
+  99%   4411
+ 100%   4411 (longest request)
+ 
+##############################################################
+ab -n 100 -c 40 -C sid=147bb7c5be5c2317449421da2a3d69e7 -p post_data.txt -T "multipart/form-data; boundary=1234567890" http://node.cs.ucalgary.ca:8550/photos/create USER 2 FOLLOWERS 99
+##############################################################
+
+Server Software:
+Server Hostname:        node.cs.ucalgary.ca
+Server Port:            8550
+
+Document Path:          /photos/create
+Document Length:        2395 bytes
+
+Concurrency Level:      40
+Time taken for tests:   12.14566 seconds
+Complete requests:      100
+Failed requests:        0
+Write errors:           0
+Non-2xx responses:      100
+Total transferred:      268846 bytes
+Total POSTed:           2537700
+HTML transferred:       239500 bytes
+Requests per second:    8.32 [#/sec] (mean)
+Time per request:       4805.827 [ms] (mean)
+Time per request:       120.146 [ms] (mean, across all concurrent requests)
+Transfer rate:          21.81 [Kbytes/sec] received
+                        206.27 kb/s sent
+                        228.12 kb/s total
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    1   1.5      0       5
+Processing:  1369 4045 1058.7   4214    5325
+Waiting:     1368 4044 1058.8   4214    5325
+Total:       1369 4046 1057.9   4214    5325
+
+Percentage of the requests served within a certain time (ms)
+  50%   4214
+  66%   4873
+  75%   4941
+  80%   4956
+  90%   5046
+  95%   5299
+  98%   5302
+  99%   5325
+ 100%   5325 (longest request)
+
+##############################################################
+ab -n 1000 -c 50 -C sid=147bb7c5be5c2317449421da2a3d69e7 -p post_data.txt -T "multipart/form-data; boundary=1234567890" http://node.cs.ucalgary.ca:8550/photos/create USER 2 FOLLOWERS 99
+##############################################################
+ 
+Server Software:
+Server Hostname:        node.cs.ucalgary.ca
+Server Port:            8550
+
+Document Path:          /photos/create
+Document Length:        2395 bytes
+
+Concurrency Level:      50
+Time taken for tests:   99.714792 seconds
+Complete requests:      1000
+Failed requests:        0
+Write errors:           0
+Non-2xx responses:      1000
+Total transferred:      2688624 bytes
+Total POSTed:           25377000
+HTML transferred:       2395000 bytes
+Requests per second:    10.03 [#/sec] (mean)
+Time per request:       4985.740 [ms] (mean)
+Time per request:       99.715 [ms] (mean, across all concurrent requests)
+Transfer rate:          26.33 [Kbytes/sec] received
+                        248.53 kb/s sent
+                        274.86 kb/s total
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.8      0       6
+Processing:  1247 4880 816.0   4743    6525
+Waiting:     1246 4879 816.0   4743    6525
+Total:       1247 4880 815.8   4744    6525
+
+Percentage of the requests served within a certain time (ms)
+  50%   4744
+  66%   4950
+  75%   5121
+  80%   5696
+  90%   6278
+  95%   6338
+  98%   6440
+  99%   6496
+ 100%   6525 (longest request)
+
+############################################################################################################################
+										PHOTO UPLOAD	C FIXED		F VARIABLE
+############################################################################################################################
+ab -n 100 -c 50 -C sid=147bb7c5be5c2317449421da2a3d69e7 -p post_data.txt -T "multipart/form-data; boundary=1234567890" http://node.cs.ucalgary.ca:8550/photos/create USER 2 FOLLOWERS 1099
+############################################################################################################################
+
+Server Software:
+Server Hostname:        node.cs.ucalgary.ca
+Server Port:            8550
+
+Document Path:          /photos/create
+Document Length:        2395 bytes
+
+Concurrency Level:      50
+Time taken for tests:   16.752123 seconds
+Complete requests:      100
+Failed requests:        0
+Write errors:           0
+Non-2xx responses:      100
+Total transferred:      268896 bytes
+Total POSTed:           2537700
+HTML transferred:       239500 bytes
+Requests per second:    5.97 [#/sec] (mean)
+Time per request:       8376.061 [ms] (mean)
+Time per request:       167.521 [ms] (mean, across all concurrent requests)
+Transfer rate:          15.64 [Kbytes/sec] received
+                        147.93 kb/s sent
+                        163.61 kb/s total
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    1   2.1      1      10
+Processing:  2920 6677 1217.1   6771    8987
+Waiting:     2919 6677 1217.0   6771    8987
+Total:       2920 6679 1217.2   6771    8989
+
+Percentage of the requests served within a certain time (ms)
+  50%   6771
+  66%   7172
+  75%   7510
+  80%   7573
+  90%   8048
+  95%   8599
+  98%   8883
+  99%   8989
+ 100%   8989 (longest request)
+
+Storage:  361  ms       Database:  345  ms      Following:  515
+POST /photos/create 302 7507ms - 2.34kb
+end of populateStreamTable
+Storage:  360  ms       Database:  351  ms      Following:  590
+POST /photos/create 302 7407ms - 2.34kb
+path is: 2520.png
+end of insertPhotoToTable
+end of populateStreamTable
+Storage:  361  ms       Database:  359  ms      Following:  684
+POST /photos/create 302 7306ms - 2.34kb
+end of populateStreamTable
+Storage:  358  ms       Database:  366  ms      Following:  814
+POST /photos/create 302 6660ms - 2.34kb
+end of populateStreamTable
+Storage:  356  ms       Database:  372  ms      Following:  884
+POST /photos/create 302 6616ms - 2.34kb
+end of populateStreamTable
+Storage:  354  ms       Database:  378  ms      Following:  989
+POST /photos/create 302 6596ms - 2.34kb
+end of populateStreamTable
+Storage:  352  ms       Database:  385  ms      Following:  1231
+POST /photos/create 302 6673ms - 2.34kb
+end of populateStreamTable
+Storage:  351  ms       Database:  391  ms      Following:  1399
+POST /photos/create 302 6732ms - 2.34kb
+end of populateStreamTable
+Storage:  344  ms       Database:  398  ms      Following:  1471
+POST /photos/create 302 6695ms - 2.34kb
+end of populateStreamTable
+Storage:  342  ms       Database:  414  ms      Following:  1537
+POST /photos/create 302 6695ms - 2.34kb
+end of populateStreamTable
+Storage:  340  ms       Database:  420  ms      Following:  1635
+POST /photos/create 302 6708ms - 2.34kb
+end of populateStreamTable
+Storage:  338  ms       Database:  427  ms      Following:  1708
+POST /photos/create 302 6698ms - 2.34kb
+end of populateStreamTable
+Storage:  329  ms       Database:  434  ms      Following:  1800
+POST /photos/create 302 6686ms - 2.34kb
+end of populateStreamTable
+Storage:  327  ms       Database:  441  ms      Following:  1893
+POST /photos/create 302 6708ms - 2.34kb
+end of populateStreamTable
+Storage:  325  ms       Database:  447  ms      Following:  2020
+POST /photos/create 302 6713ms - 2.34kb
+end of populateStreamTable
+Storage:  322  ms       Database:  459  ms      Following:  2097
+POST /photos/create 302 6714ms - 2.34kb
+end of populateStreamTable
+Storage:  316  ms       Database:  466  ms      Following:  2235
+POST /photos/create 302 6767ms - 2.34kb
+end of populateStreamTable
+Storage:  315  ms       Database:  472  ms      Following:  2330
+POST /photos/create 302 6783ms - 2.34kb
+end of populateStreamTable
+Storage:  312  ms       Database:  478  ms      Following:  2408
+POST /photos/create 302 6770ms - 2.34kb
+end of populateStreamTable
+Storage:  310  ms       Database:  485  ms      Following:  2510
+POST /photos/create 302 6799ms - 2.34kb
+end of populateStreamTable
+Storage:  299  ms       Database:  491  ms      Following:  2637
+POST /photos/create 302 6788ms - 2.34kb
+end of populateStreamTable
+Storage:  289  ms       Database:  497  ms      Following:  2721
+POST /photos/create 302 6740ms - 2.34kb
+end of populateStreamTable
+Storage:  284  ms       Database:  504  ms      Following:  2790
+POST /photos/create 302 6705ms - 2.34kb
+end of populateStreamTable
+Storage:  282  ms       Database:  510  ms      Following:  2899
+POST /photos/create 302 6733ms - 2.34kb
+end of populateStreamTable
+Storage:  280  ms       Database:  517  ms      Following:  2993
+POST /photos/create 302 6733ms - 2.34kb
+end of populateStreamTable
+Storage:  278  ms       Database:  529  ms      Following:  3071
+POST /photos/create 302 6726ms - 2.34kb
+end of populateStreamTable
+Storage:  268  ms       Database:  535  ms      Following:  3149
+POST /photos/create 302 6691ms - 2.34kb
+end of populateStreamTable
+Storage:  267  ms       Database:  542  ms      Following:  3463
+POST /photos/create 302 6912ms - 2.34kb
+end of populateStreamTable
+Storage:  264  ms       Database:  552  ms      Following:  3554
+POST /photos/create 302 6881ms - 2.34kb
+end of populateStreamTable
+Storage:  262  ms       Database:  558  ms      Following:  3653
+POST /photos/create 302 6855ms - 2.34kb
+end of populateStreamTable
+Storage:  261  ms       Database:  564  ms      Following:  3749
+POST /photos/create 302 6841ms - 2.34kb
+end of populateStreamTable
+Storage:  259  ms       Database:  571  ms      Following:  3868
+POST /photos/create 302 6845ms - 2.34kb
+end of populateStreamTable
+Storage:  257  ms       Database:  578  ms      Following:  3945
+POST /photos/create 302 6765ms - 2.34kb
+end of populateStreamTable
+Storage:  255  ms       Database:  584  ms      Following:  4042
+POST /photos/create 302 6773ms - 2.34kb
+end of populateStreamTable
+Storage:  252  ms       Database:  592  ms      Following:  4405
+POST /photos/create 302 7040ms - 2.34kb
+end of populateStreamTable
+Storage:  250  ms       Database:  601  ms      Following:  4607
+POST /photos/create 302 7121ms - 2.34kb
+end of populateStreamTable
+Storage:  248  ms       Database:  608  ms      Following:  4765
+POST /photos/create 302 7197ms - 2.34kb
+end of populateStreamTable
+Storage:  247  ms       Database:  614  ms      Following:  4849
+POST /photos/create 302 7202ms - 2.34kb
+end of populateStreamTable
+Storage:  244  ms       Database:  620  ms      Following:  4919
+POST /photos/create 302 7171ms - 2.34kb
+end of populateStreamTable
+Storage:  242  ms       Database:  627  ms      Following:  5001
+POST /photos/create 302 7156ms - 2.34kb
+end of populateStreamTable
+Storage:  240  ms       Database:  633  ms      Following:  5334
+POST /photos/create 302 7417ms - 2.34kb
+end of populateStreamTable
+Storage:  263  ms       Database:  615  ms      Following:  5564
+POST /photos/create 302 7561ms - 2.34kb
+end of populateStreamTable
+Storage:  261  ms       Database:  621  ms      Following:  5690
+POST /photos/create 302 7564ms - 2.34kb
+end of populateStreamTable
+Storage:  259  ms       Database:  643  ms      Following:  5821
+POST /photos/create 302 7534ms - 2.34kb
+end of populateStreamTable
+Storage:  257  ms       Database:  649  ms      Following:  5914
+POST /photos/create 302 7545ms - 2.34kb
+end of populateStreamTable
+Storage:  256  ms       Database:  664  ms      Following:  6016
+POST /photos/create 302 7571ms - 2.34kb
+end of populateStreamTable
+Storage:  254  ms       Database:  671  ms      Following:  6116
+POST /photos/create 302 7587ms - 2.34kb
+end of populateStreamTable
+Storage:  251  ms       Database:  677  ms      Following:  6232
+POST /photos/create 302 7610ms - 2.34kb
+end of populateStreamTable
+Storage:  249  ms       Database:  683  ms      Following:  6326
+POST /photos/create 302 7608ms - 2.34kb
+end of populateStreamTable
+Storage:  252  ms       Database:  915  ms      Following:  6168
+POST /photos/create 302 7591ms - 2.34kb
+
+##############################################################
+ab -n 100 -c 50 -C sid=df79e207f04f7d3a0f3fcd213f73a479 -p post_data.txt -T "multipart/form-data; boundary=1234567890" http://node.cs.ucalgary.ca:8550/photos/create USER 3 FOLLOWERS 499
+##############################################################
+
+Server Software:
+Server Hostname:        node.cs.ucalgary.ca
+Server Port:            8550
+
+Document Path:          /photos/create
+Document Length:        2395 bytes
+
+Concurrency Level:      50
+Time taken for tests:   16.179029 seconds
+Complete requests:      100
+Failed requests:        0
+Write errors:           0
+Non-2xx responses:      100
+Total transferred:      268864 bytes
+Total POSTed:           2537700
+HTML transferred:       239500 bytes
+Requests per second:    6.18 [#/sec] (mean)
+Time per request:       8089.515 [ms] (mean)
+Time per request:       161.790 [ms] (mean, across all concurrent requests)
+Transfer rate:          16.19 [Kbytes/sec] received
+                        153.17 kb/s sent
+                        169.40 kb/s total
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    1   1.7      1       6
+Processing:  2809 6562 1476.1   6704    9311
+Waiting:     2808 6561 1476.1   6703    9311
+Total:       2809 6563 1475.9   6704    9314
+
+Percentage of the requests served within a certain time (ms)
+  50%   6704
+  66%   7307
+  75%   7546
+  80%   7649
+  90%   8334
+  95%   8935
+  98%   9205
+  99%   9314
+ 100%   9314 (longest request)
+ 
+Storage:  595  ms       Database:  215  ms      Following:  253
+POST /photos/create 302 7919ms - 2.34kb
+end of populateStreamTable
+Storage:  590  ms       Database:  217  ms      Following:  337
+POST /photos/create 302 7792ms - 2.34kb
+end of populateStreamTable
+Storage:  588  ms       Database:  220  ms      Following:  431
+POST /photos/create 302 7677ms - 2.34kb
+end of populateStreamTable
+Storage:  587  ms       Database:  222  ms      Following:  541
+POST /photos/create 302 7659ms - 2.34kb
+end of populateStreamTable
+Storage:  579  ms       Database:  223  ms      Following:  643
+POST /photos/create 302 7648ms - 2.34kb
+end of populateStreamTable
+Storage:  577  ms       Database:  226  ms      Following:  734
+POST /photos/create 302 7560ms - 2.34kb
+end of populateStreamTable
+Storage:  574  ms       Database:  228  ms      Following:  822
+POST /photos/create 302 7549ms - 2.34kb
+end of populateStreamTable
+Storage:  571  ms       Database:  230  ms      Following:  958
+POST /photos/create 302 7580ms - 2.34kb
+end of populateStreamTable
+Storage:  568  ms       Database:  233  ms      Following:  1032
+POST /photos/create 302 7546ms - 2.34kb
+end of populateStreamTable
+Storage:  560  ms       Database:  234  ms      Following:  1110
+POST /photos/create 302 7468ms - 2.34kb
+end of populateStreamTable
+Storage:  556  ms       Database:  238  ms      Following:  1189
+POST /photos/create 302 7449ms - 2.34kb
+end of populateStreamTable
+Storage:  554  ms       Database:  239  ms      Following:  1285
+POST /photos/create 302 7425ms - 2.34kb
+end of populateStreamTable
+Storage:  550  ms       Database:  242  ms      Following:  1378
+POST /photos/create 302 7410ms - 2.34kb
+end of populateStreamTable
+Storage:  547  ms       Database:  244  ms      Following:  1463
+POST /photos/create 302 7307ms - 2.34kb
+end of populateStreamTable
+Storage:  543  ms       Database:  247  ms      Following:  1538
+POST /photos/create 302 7296ms - 2.34kb
+end of populateStreamTable
+Storage:  540  ms       Database:  249  ms      Following:  1618
+POST /photos/create 302 7335ms - 2.34kb
+end of populateStreamTable
+Storage:  533  ms       Database:  254  ms      Following:  1731
+POST /photos/create 302 7369ms - 2.34kb
+end of populateStreamTable
+Storage:  529  ms       Database:  257  ms      Following:  1834
+POST /photos/create 302 7082ms - 2.34kb
+end of populateStreamTable
+Storage:  528  ms       Database:  259  ms      Following:  1918
+POST /photos/create 302 7075ms - 2.34kb
+end of populateStreamTable
+Storage:  525  ms       Database:  262  ms      Following:  1994
+POST /photos/create 302 7026ms - 2.34kb
+end of populateStreamTable
+Storage:  521  ms       Database:  264  ms      Following:  2161
+POST /photos/create 302 7056ms - 2.34kb
+end of populateStreamTable
+Storage:  520  ms       Database:  265  ms      Following:  2242
+POST /photos/create 302 7041ms - 2.34kb
+end of populateStreamTable
+Storage:  517  ms       Database:  268  ms      Following:  2316
+POST /photos/create 302 7015ms - 2.34kb
+end of populateStreamTable
+Storage:  513  ms       Database:  271  ms      Following:  2398
+POST /photos/create 302 6981ms - 2.34kb
+end of populateStreamTable
+Storage:  511  ms       Database:  272  ms      Following:  2514
+POST /photos/create 302 6722ms - 2.34kb
+end of populateStreamTable
+Storage:  508  ms       Database:  275  ms      Following:  2605
+POST /photos/create 302 6410ms - 2.34kb
+end of populateStreamTable
+Storage:  504  ms       Database:  279  ms      Following:  2697
+POST /photos/create 302 6426ms - 2.34kb
+end of populateStreamTable
+Storage:  495  ms       Database:  282  ms      Following:  2808
+POST /photos/create 302 6435ms - 2.34kb
+end of populateStreamTable
+Storage:  486  ms       Database:  284  ms      Following:  2918
+POST /photos/create 302 6483ms - 2.34kb
+end of populateStreamTable
+Storage:  483  ms       Database:  286  ms      Following:  3064
+POST /photos/create 302 6498ms - 2.34kb
+end of populateStreamTable
+Storage:  472  ms       Database:  310  ms      Following:  3130
+POST /photos/create 302 6485ms - 2.34kb
+end of populateStreamTable
+Storage:  468  ms       Database:  312  ms      Following:  3211
+POST /photos/create 302 6426ms - 2.34kb
+end of populateStreamTable
+Storage:  465  ms       Database:  313  ms      Following:  3325
+POST /photos/create 302 6421ms - 2.34kb
+end of populateStreamTable
+Storage:  460  ms       Database:  317  ms      Following:  3401
+POST /photos/create 302 6420ms - 2.34kb
+end of populateStreamTable
+Storage:  458  ms       Database:  319  ms      Following:  3516
+POST /photos/create 302 6416ms - 2.34kb
+end of populateStreamTable
+Storage:  449  ms       Database:  322  ms      Following:  3600
+POST /photos/create 302 6389ms - 2.34kb
+end of populateStreamTable
+Storage:  439  ms       Database:  326  ms      Following:  3699
+POST /photos/create 302 6410ms - 2.34kb
+end of populateStreamTable
+Storage:  435  ms       Database:  328  ms      Following:  3804
+POST /photos/create 302 6430ms - 2.34kb
+end of populateStreamTable
+Storage:  426  ms       Database:  331  ms      Following:  3905
+POST /photos/create 302 6299ms - 2.34kb
+end of populateStreamTable
+Storage:  423  ms       Database:  334  ms      Following:  3992
+POST /photos/create 302 6304ms - 2.34kb
+end of populateStreamTable
+Storage:  413  ms       Database:  337  ms      Following:  4106
+POST /photos/create 302 6334ms - 2.34kb
+end of populateStreamTable
+Storage:  409  ms       Database:  340  ms      Following:  4240
+POST /photos/create 302 6281ms - 2.34kb
+end of populateStreamTable
+Storage:  407  ms       Database:  342  ms      Following:  4320
+POST /photos/create 302 6255ms - 2.34kb
+end of populateStreamTable
+Storage:  402  ms       Database:  344  ms      Following:  4401
+POST /photos/create 302 6171ms - 2.34kb
+end of populateStreamTable
+Storage:  400  ms       Database:  346  ms      Following:  4492
+POST /photos/create 302 6173ms - 2.34kb
+end of populateStreamTable
+Storage:  389  ms       Database:  349  ms      Following:  4579
+POST /photos/create 302 6172ms - 2.34kb
+end of populateStreamTable
+Storage:  386  ms       Database:  356  ms      Following:  4654
+POST /photos/create 302 6169ms - 2.34kb
+end of populateStreamTable
+Storage:  382  ms       Database:  359  ms      Following:  5288
+POST /photos/create 302 6698ms - 2.34kb
+end of populateStreamTable
+Storage:  380  ms       Database:  361  ms      Following:  5368
+POST /photos/create 302 6695ms - 2.34kb
+end of populateStreamTable
+Storage:  376  ms       Database:  364  ms      Following:  5480
+POST /photos/create 302 6702ms - 2.34kb
+
+##############################################################
+ab -n 100 -c 50 -C sid=0f80c668f47834c801c6893704ef5f97 -p post_data.txt -T "multipart/form-data; boundary=1234567890" http://node.cs.ucalgary.ca:8550/photos/create USER 3 FOLLOWERS 100
+##############################################################
+
+Storage:  2339  ms      Database:  2004  ms     Following:  153
+Storage:  3144  ms      Database:  1027  ms     Following:  218
+Storage:  3641  ms      Database:  275  ms      Following:  294
+Storage:  3552  ms      Database:  276  ms      Following:  364
+Storage:  3266  ms      Database:  343  ms      Following:  397
+Storage:  3259  ms      Database:  344  ms      Following:  482
+Storage:  3042  ms      Database:  410  ms      Following:  499
+Storage:  2959  ms      Database:  410  ms      Following:  589
+Storage:  2803  ms      Database:  406  ms      Following:  681
+Storage:  2270  ms      Database:  482  ms      Following:  691
+Storage:  2001  ms      Database:  557  ms      Following:  711
+Storage:  1938  ms      Database:  557  ms      Following:  801
+Storage:  1842  ms      Database:  562  ms      Following:  876
+Storage:  1081  ms      Database:  741  ms      Following:  777
+Storage:  1025  ms      Database:  741  ms      Following:  871
+Storage:  956  ms       Database:  746  ms      Following:  933
+Storage:  755  ms       Database:  822  ms      Following:  929
+Storage:  531  ms       Database:  911  ms      Following:  926
+Storage:  371  ms       Database:  918  ms      Following:  999
+Storage:  272  ms       Database:  1004  ms     Following:  975
+Storage:  277  ms       Database:  1004  ms     Following:  1041
+Storage:  275  ms       Database:  1008  ms     Following:  1109
+Storage:  275  ms       Database:  1111  ms     Following:  1169
+Storage:  271  ms       Database:  1116  ms     Following:  1251
+Storage:  274  ms       Database:  1115  ms     Following:  1316
+Storage:  273  ms       Database:  1119  ms     Following:  1394
+Storage:  340  ms       Database:  1131  ms     Following:  1384
+Storage:  339  ms       Database:  1209  ms     Following:  1391
+Storage:  339  ms       Database:  1288  ms     Following:  1507
+Storage:  342  ms       Database:  1286  ms     Following:  1596
+Storage:  340  ms       Database:  1290  ms     Following:  1726
+Storage:  342  ms       Database:  1289  ms     Following:  1857
+Storage:  340  ms       Database:  1292  ms     Following:  1973
+Storage:  338  ms       Database:  1297  ms     Following:  2124
+Storage:  337  ms       Database:  1301  ms     Following:  2269
+Storage:  335  ms       Database:  1304  ms     Following:  2357
+Storage:  334  ms       Database:  1308  ms     Following:  2461
+Storage:  332  ms       Database:  1312  ms     Following:  2526
+Storage:  331  ms       Database:  1384  ms     Following:  2514
+Storage:  412  ms       Database:  1387  ms     Following:  2519
+Storage:  409  ms       Database:  1460  ms     Following:  2532
+Storage:  407  ms       Database:  1464  ms     Following:  2605
+Storage:  408  ms       Database:  1464  ms     Following:  2671
+Storage:  408  ms       Database:  1548  ms     Following:  2647
+Storage:  406  ms       Database:  1553  ms     Following:  2767
+Storage:  408  ms       Database:  1552  ms     Following:  2829
+Storage:  405  ms       Database:  1623  ms     Following:  2825
+Storage:  404  ms       Database:  1625  ms     Following:  2892
+Storage:  403  ms       Database:  1701  ms     Following:  2879
+Storage:  475  ms       Database:  1684  ms     Following:  2892
+
+
+Server Software:
+Server Hostname:        node.cs.ucalgary.ca
+Server Port:            8550
+
+Document Path:          /photos/create
+Document Length:        2395 bytes
+
+Concurrency Level:      50
+Time taken for tests:   16.584065 seconds
+Complete requests:      100
+Failed requests:        0
+Write errors:           0
+Non-2xx responses:      100
+Total transferred:      268908 bytes
+Total POSTed:           2537700
+HTML transferred:       239500 bytes
+Requests per second:    6.03 [#/sec] (mean)
+Time per request:       8292.032 [ms] (mean)
+Time per request:       165.841 [ms] (mean, across all concurrent requests)
+Transfer rate:          15.80 [Kbytes/sec] received
+                        149.43 kb/s sent
+                        165.27 kb/s total
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    1   1.6      1       5
+Processing:  5112 7175 955.8   6994    9832
+Waiting:     5112 7174 955.8   6994    9831
+Total:       5112 7176 956.4   6994    9835
+
+Percentage of the requests served within a certain time (ms)
+  50%   6994
+  66%   7068
+  75%   7404
+  80%   7774
+  90%   8649
+  95%   9534
+  98%   9769
+  99%   9835
+ 100%   9835 (longest request)
+ 
+##############################################################
+ab -n 100 -c 50 -C sid=77246917e3feba631a2d55fe522d8e44 -p post_data.txt -T "multipart/form-data; boundary=1234567890" http://node.cs.ucalgary.ca:8550/photos/create USER 91 FOLLOWERS 10
+##############################################################
+
+Storage:  2577  ms      Database:  300  ms      Following:  171
+POST /photos/create 302 3740ms - 2.34kb
+Photo ID is 1778
+Photo ID is 1779
+path is: 1762.png
+end of insertPhotoToTable
+Photo ID is 1780
+path is: 1763.png
+end of insertPhotoToTable
+Photo ID is 1781
+end of populateStreamTable
+Storage:  2437  ms      Database:  373  ms      Following:  159
+POST /photos/create 302 3738ms - 2.34kb
+Photo ID is 1782
+path is: 1764.png
+end of insertPhotoToTable
+Photo ID is 1783
+Photo ID is 1784
+path is: 1765.png
+end of insertPhotoToTable
+end of populateStreamTable
+Storage:  2318  ms      Database:  373  ms      Following:  236
+POST /photos/create 302 3761ms - 2.34kb
+Photo ID is 1785
+Photo ID is 1786
+path is: 1766.png
+end of insertPhotoToTable
+end of populateStreamTable
+Storage:  2262  ms      Database:  374  ms      Following:  336
+POST /photos/create 302 3735ms - 2.34kb
+Photo ID is 1787
+Photo ID is 1788
+path is: 1767.png
+end of insertPhotoToTable
+Photo ID is 1789
+Photo ID is 1790
+Photo ID is 1791
+Photo ID is 1792
+Photo ID is 1793
+end of populateStreamTable
+Storage:  2203  ms      Database:  360  ms      Following:  399
+POST /photos/create 302 3715ms - 2.34kb
+Photo ID is 1794
+path is: 1768.png
+end of insertPhotoToTable
+Photo ID is 1795
+Photo ID is 1796
+path is: 1769.png
+end of insertPhotoToTable
+end of populateStreamTable
+Storage:  2023  ms      Database:  360  ms      Following:  462
+POST /photos/create 302 3713ms - 2.34kb
+Photo ID is 1797
+path is: 1770.png
+end of insertPhotoToTable
+Photo ID is 1798
+path is: 1771.png
+end of insertPhotoToTable
+Photo ID is 1799
+path is: 1772.png
+end of insertPhotoToTable
+path is: 1773.png
+end of insertPhotoToTable
+Photo ID is 1800
+path is: 1774.png
+end of insertPhotoToTable
+end of populateStreamTable
+Storage:  1693  ms      Database:  358  ms      Following:  530
+POST /photos/create 302 3707ms - 2.34kb
+path is: 1775.png
+end of insertPhotoToTable
+path is: 1776.png
+end of insertPhotoToTable
+end of populateStreamTable
+Storage:  1579  ms      Database:  362  ms      Following:  595
+POST /photos/create 302 3691ms - 2.34kb
+path is: 1777.png
+end of insertPhotoToTable
+path is: 1778.png
+end of insertPhotoToTable
+path is: 1779.png
+end of insertPhotoToTable
+end of populateStreamTable
+Storage:  1414  ms      Database:  423  ms      Following:  595
+POST /photos/create 302 3671ms - 2.34kb
+path is: 1780.png
+end of insertPhotoToTable
+end of populateStreamTable
+Storage:  1358  ms      Database:  422  ms      Following:  651
+POST /photos/create 302 3661ms - 2.34kb
+path is: 1781.png
+end of insertPhotoToTable
+path is: 1782.png
+end of insertPhotoToTable
+end of populateStreamTable
+Storage:  1249  ms      Database:  497  ms      Following:  629
+POST /photos/create 302 3655ms - 2.34kb
+path is: 1783.png
+end of insertPhotoToTable
+path is: 1784.png
+end of insertPhotoToTable
+end of populateStreamTable
+Storage:  1089  ms      Database:  500  ms      Following:  687
+POST /photos/create 302 3661ms - 2.34kb
+path is: 1785.png
+end of insertPhotoToTable
+path is: 1786.png
+end of insertPhotoToTable
+end of populateStreamTable
+Storage:  973  ms       Database:  601  ms      Following:  646
+POST /photos/create 302 3681ms - 2.34kb
+path is: 1787.png
+end of insertPhotoToTable
+path is: 1788.png
+end of insertPhotoToTable
+end of populateStreamTable
+Storage:  867  ms       Database:  656  ms      Following:  666
+POST /photos/create 302 3716ms - 2.34kb
+path is: 1789.png
+end of insertPhotoToTable
+path is: 1790.png
+end of insertPhotoToTable
+path is: 1791.png
+end of insertPhotoToTable
+path is: 1792.png
+end of insertPhotoToTable
+path is: 1793.png
+end of insertPhotoToTable
+path is: 1794.png
+end of insertPhotoToTable
+end of populateStreamTable
+Storage:  544  ms       Database:  666  ms      Following:  704
+POST /photos/create 302 3703ms - 2.34kb
+path is: 1795.png
+end of insertPhotoToTable
+path is: 1796.png
+end of insertPhotoToTable
+end of populateStreamTable
+Storage:  409  ms       Database:  670  ms      Following:  760
+POST /photos/create 302 3706ms - 2.34kb
+path is: 1797.png
+end of insertPhotoToTable
+end of populateStreamTable
+Storage:  351  ms       Database:  730  ms      Following:  750
+POST /photos/create 302 3701ms - 2.34kb
+path is: 1798.png
+end of insertPhotoToTable
+end of populateStreamTable
+Storage:  294  ms       Database:  734  ms      Following:  808
+POST /photos/create 302 3697ms - 2.34kb
+path is: 1799.png
+end of insertPhotoToTable
+end of populateStreamTable
+Storage:  242  ms       Database:  737  ms      Following:  863
+POST /photos/create 302 3702ms - 2.34kb
+end of populateStreamTable
+Storage:  241  ms       Database:  739  ms      Following:  918
+POST /photos/create 302 3667ms - 2.34kb
+path is: 1800.png
+end of insertPhotoToTable
+end of populateStreamTable
+Storage:  298  ms       Database:  682  ms      Following:  974
+POST /photos/create 302 3648ms - 2.34kb
+end of populateStreamTable
+Storage:  299  ms       Database:  740  ms      Following:  965
+POST /photos/create 302 3648ms - 2.34kb
+end of populateStreamTable
+Storage:  298  ms       Database:  742  ms      Following:  1021
+POST /photos/create 302 3647ms - 2.34kb
+end of populateStreamTable
+Storage:  297  ms       Database:  811  ms      Following:  1009
+POST /photos/create 302 3648ms - 2.34kb
+end of populateStreamTable
+Storage:  298  ms       Database:  811  ms      Following:  1064
+POST /photos/create 302 3659ms - 2.34kb
+end of populateStreamTable
+Storage:  306  ms       Database:  804  ms      Following:  1128
+POST /photos/create 302 3697ms - 2.34kb
+end of populateStreamTable
+Storage:  305  ms       Database:  863  ms      Following:  1164
+POST /photos/create 302 3693ms - 2.34kb
+end of populateStreamTable
+Storage:  366  ms       Database:  852  ms      Following:  1163
+POST /photos/create 302 3691ms - 2.34kb
+end of populateStreamTable
+Storage:  372  ms       Database:  847  ms      Following:  1218
+POST /photos/create 302 3687ms - 2.34kb
+end of populateStreamTable
+Storage:  371  ms       Database:  907  ms      Following:  1213
+POST /photos/create 302 3691ms - 2.34kb
+end of populateStreamTable
+Storage:  370  ms       Database:  909  ms      Following:  1269
+POST /photos/create 302 3656ms - 2.34kb
+end of populateStreamTable
+Storage:  372  ms       Database:  966  ms      Following:  1263
+POST /photos/create 302 3636ms - 2.34kb
+end of populateStreamTable
+Storage:  371  ms       Database:  969  ms      Following:  1312
+POST /photos/create 302 3631ms - 2.34kb
+end of populateStreamTable
+Storage:  373  ms       Database:  1041  ms     Following:  1292
+POST /photos/create 302 3632ms - 2.34kb
+end of populateStreamTable
+Storage:  365  ms       Database:  1044  ms     Following:  1349
+POST /photos/create 302 3629ms - 2.34kb
+end of populateStreamTable
+Storage:  365  ms       Database:  1139  ms     Following:  1309
+POST /photos/create 302 3634ms - 2.34kb
+end of populateStreamTable
+Storage:  364  ms       Database:  1141  ms     Following:  1364
+POST /photos/create 302 3626ms - 2.34kb
+end of populateStreamTable
+Storage:  362  ms       Database:  1145  ms     Following:  1413
+POST /photos/create 302 3671ms - 2.34kb
+end of populateStreamTable
+Storage:  361  ms       Database:  1147  ms     Following:  1514
+POST /photos/create 302 3668ms - 2.34kb
+end of populateStreamTable
+Storage:  357  ms       Database:  1150  ms     Following:  1566
+POST /photos/create 302 3666ms - 2.34kb
+end of populateStreamTable
+Storage:  358  ms       Database:  1149  ms     Following:  1620
+POST /photos/create 302 3660ms - 2.34kb
+end of populateStreamTable
+Storage:  358  ms       Database:  1202  ms     Following:  1623
+POST /photos/create 302 3631ms - 2.34kb
+end of populateStreamTable
+Storage:  357  ms       Database:  1209  ms     Following:  1672
+POST /photos/create 302 3603ms - 2.34kb
+end of populateStreamTable
+Storage:  359  ms       Database:  1259  ms     Following:  1668
+POST /photos/create 302 3604ms - 2.34kb
+end of populateStreamTable
+Storage:  358  ms       Database:  1319  ms     Following:  1664
+POST /photos/create 302 3599ms - 2.34kb
+end of populateStreamTable
+Storage:  358  ms       Database:  1376  ms     Following:  1670
+POST /photos/create 302 3606ms - 2.34kb
+end of populateStreamTable
+Storage:  355  ms       Database:  1490  ms     Following:  1613
+
+
+Server Software:
+Server Hostname:        node.cs.ucalgary.ca
+Server Port:            8550
+
+Document Path:          /photos/create
+Document Length:        2395 bytes
+
+Concurrency Level:      50
+Time taken for tests:   7.815009 seconds
+Complete requests:      100
+Failed requests:        0
+Write errors:           0
+Non-2xx responses:      100
+Total transferred:      268832 bytes
+Total POSTed:           2537700
+HTML transferred:       239500 bytes
+Requests per second:    12.80 [#/sec] (mean)
+Time per request:       3907.505 [ms] (mean)
+Time per request:       78.150 [ms] (mean, across all concurrent requests)
+Transfer rate:          33.53 [Kbytes/sec] received
+                        317.11 kb/s sent
+                        350.70 kb/s total
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    1   1.6      1       5
+Processing:   582 3087 906.9   3633    4039
+Waiting:      582 3086 906.8   3633    4039
+Total:        583 3088 906.2   3633    4042
+
+Percentage of the requests served within a certain time (ms)
+  50%   3633
+  66%   3668
+  75%   3693
+  80%   3704
+  90%   3742
+  95%   3836
+  98%   3992
+  99%   4042
+ 100%   4042 (longest request)
