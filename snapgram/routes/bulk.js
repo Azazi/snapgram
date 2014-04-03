@@ -6,7 +6,7 @@ var secret_password = 'superman'
 exports.clear = function(req, res){
     if(req.query.password === secret_password){
         var queries = ['DROP TABLE IF EXISTS Users, Photos, Follows, Streams',
-                       'CREATE TABLE IF NOT EXISTS Users (user_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, user_name VARCHAR(35), name VARCHAR(70), password CHAR(128), followers_count INT UNSIGNED, photo_count INT UNSIGNED, gender CHAR(1), dob DATE, profile_image BIGINT UNSIGNED, feed_id INT UNSIGNED, stream_id INT UNSIGNED, sid VARCHAR(35)) ENGINE=INNODB;',
+                       'CREATE TABLE IF NOT EXISTS Users (user_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, user_name VARCHAR(35), name VARCHAR(70), password CHAR(128), followers_count INT UNSIGNED, photo_count INT UNSIGNED, gender CHAR(1), dob DATE, profile_image BIGINT UNSIGNED, feed_id INT UNSIGNED, stream_id INT UNSIGNED, sid VARCHAR(100)) ENGINE=INNODB;',
                        'CREATE TABLE IF NOT EXISTS Photos (photo_id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT, caption VARCHAR(200), time_stamp BIGINT UNSIGNED, owner_id INT UNSIGNED, photo_path VARCHAR(200), owner_name VARCHAR(70), original_owner BIGINT UNSIGNED, original_owner_name VARCHAR(70), shared VARCHAR(3)) ENGINE=INNODB;',
                        'CREATE TABLE IF NOT EXISTS Follows (follower_id INT UNSIGNED, followee_id INT UNSIGNED) ENGINE=INNODB;',
                        'CREATE TABLE IF NOT EXISTS Streams (stream_id INT UNSIGNED, photo_id BIGINT UNSIGNED) ENGINE=INNODB;']
@@ -39,7 +39,8 @@ exports.users = function(req, res){
         var index = 1;
         /// Logging
         console.log('Started processing users...');
-        req.body.users.forEach(function(user){
+	 console.log(req.body);
+        req.body.forEach(function(user){
             /// Logging
             console.log('Processing user: ', user.id);
 
@@ -54,7 +55,7 @@ exports.users = function(req, res){
                 }
                 else{
                     var user_name = user.name + index.toString();
-                    req.conn.query("INSERT INTO Users (name, user_name, password) VALUES ('" + user.name + "', '" + user.id + "', '" + crypto.createHash('md5').update(user.password.toString()).digest('hex') + "')", function (err, results, fields){
+                    req.conn.query("INSERT INTO Users (name, user_name, password) VALUES ('" + user.name + "', '" + user.name + "', '" + crypto.createHash('md5').update(user.password.toString()).digest('hex') + "')", function (err, results, fields){
                         if(err){
                             sendInternalServerError(req,res);
                         }
@@ -100,7 +101,7 @@ exports.users = function(req, res){
                 }
             });
             index++;
-            if(index>req.body.users.length && processedUsers == req.body.users.length){
+            if(index>req.body.length && processedUsers == req.body.length){
                 console.log('Inserted all users.');
             }
         });
@@ -148,7 +149,7 @@ exports.streams = function(req, res){
         /// Logging 
         console.log('Started processing photos...');
 
-        req.body.streams.forEach(function(photo){
+        req.body.forEach(function(photo){
             ///Logging
             console.log('Processing photo: ', photo.id);
 

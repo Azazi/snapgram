@@ -3,15 +3,10 @@
  * GET home page.
  */
 
-exports.index = function(req, res){
-    req.conn.query("SELECT * FROM Users WHERE sid = '" + req.cookies.sid + "'", function (err, results, fields){
-        if(err){
-            sendInternalServerError(req, res);
-        }
-        else{            
-            if(results.length > 0){
-                var uname = results[0].user_name;
-                req.conn.query("SELECT * FROM Streams a, Users c, Photos b WHERE a.stream_id = '" + results[0].user_id + "' AND a.photo_id = b.photo_id AND c.user_id = '" + results[0].user_id + "'", function (err, results, fields){
+exports.index = function(req, res){      
+		console.log(res.req.session);
+            if(req.session.loggedin != "" && req.session.loggedin != undefined){
+                req.conn.query("SELECT * FROM Streams a, Users c, Photos b WHERE a.stream_id = '" + req.myuid + "' AND a.photo_id = b.photo_id AND c.user_id = '" + req.myuid + "'", function (err, results, fields){
                     if(err){
                         sendInternalServerError(req, res);
                     }
@@ -21,7 +16,7 @@ exports.index = function(req, res){
                             title: 'Welcome to Snapgram',
                             logged_in: true,
                             sid: req.cookies.sid,
-                            user_name: uname,
+                            user_name: res.req.session.loggedin,
                             stream: results,
                             page: req.query.page,
                             myuid: req.myuid
@@ -37,9 +32,6 @@ exports.index = function(req, res){
                     logged_in: false
                 })
             }
-        }
-
-    });
 };
 
 function sendInternalServerError(req, res){

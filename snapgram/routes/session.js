@@ -6,8 +6,8 @@ var _ = require('underscore');
  */
 
 exports.new = function(req, res){
-	res.render('login', {
-		title: 'Login to Snapgram',
+    res.render('login', {
+        title: 'Login to Snapgram',
         redir: req.query.redir,
         myuid: req.myuid
     });
@@ -16,64 +16,48 @@ exports.new = function(req, res){
 exports.create = function(req, res){
     var username = req.body.username;
     var password = req.body.password;
+    var cryptpassword = crypto.createHash('md5').update(req.body.password).digest('hex');
     console.log("Username is: " + username);
     console.log("Password is: " + password);
     var login = false;
 
-    req.conn.query(
-        'SELECT * FROM Users;',
-        function(err,usernames,fields){
-            if(err){
-                console.log(err);
-                sendInternalServerError(req, res);
-            }
-            _.each(usernames, function(user){
-                if(user.user_name == req.body.username){
-                    console.log("User found in database, checking password...");
-                    console.log("Stored password is: " + user.password);
-                    console.log("Entered password is: " + crypto.createHash('md5').update(req.body.password).digest('hex'));
-                    if(user.password == crypto.createHash('md5').update(req.body.password).digest('hex')){
-                        console.log("...password matches!")
-                        login = true;
-                    }
-                }
-            })
-
-            if(login){
-                var hash = crypto.createHash('md5').update(new Date() + req.body.username).digest('hex');
-                req.conn.query("UPDATE Users SET sid = '" + hash + "' WHERE user_name = '" + req.body.username + "'", function (err, rows, fields){
-                    if(err){
-                        sendInternalServerError(req, res);
-                    }
-                    else console.log('SID updated for\t' + req.body.username + "\t" + new Date());
-                });
-
-                if(req.body.redir != ''){
-                    res.cookie("sid", hash).redirect(req.body.redir);
-                }
-                else{
-                    res.cookie("sid", hash).redirect('/');
-                }
-
-                req.conn.query("SELECT sid FROM Users WHERE user_name = '" + req.body.username + "'", function (err, sids, fields){
-                    if(err){
-                        sendInternalServerError(req, res);
-                    }
-                });
-            }
-            else{
+    req.conn.query("SELECT * FROM Users WHERE user_name = '" + username + "' AND password = '" + cryptpassword + "'", function(err,usernames,fields){
+        if(err){
+            console.log(err);
+            sendInternalServerError(req, res);
+        }
+        else{
+            if(usernames.length <= 0){
+                console.log("CRAPPING OUT");
                 res.render('login', {
-		            title: 'Login to Snapgram',
+                    title: 'Login to Snapgram',
                     redir: req.body.redir,
                     failed: 'true'
                 });
             }
+            else{
+                console.log("user and password exists in db..........................");
+                req.session['loggedin'] = req.body.username;
+                req.session['userid'] = usernames[0].user_id;
+		  console.log("session saved.............................................................................");
+
+                if(req.session.loggedin != undefined){
+                    if(req.body.redir != '' && req.body.redir != undefined){
+                        console.log(req.body.redir);
+                        res.redirect(req.body.redir);
+                    }
+                    else{
+                        res.redirect('/');
+                    }
+                }
+            }
         }
-    );
+    });
 };
 
 exports.end = function(req, res){
-    res.cookie("sid", 0).redirect('/');
+        req.session.destroy();
+        res.redirect('/');
 }
 
 function sendInternalServerError(req, res){
@@ -81,12 +65,12 @@ function sendInternalServerError(req, res){
     res.status(500);
     // respond with html page
     if (req.accepts('html')) {
-    res.render('error', {
-        title: '500 | Internal Server Error',
-        code: 500,
-        myuid: req.myuid
-    });
-    return;
+        res.render('error', {
+            title: '500 | Internal Server Error',
+            code: 500,
+            myuid: req.myuid
+        });
+        return;
     }
 
     // respond with json

@@ -7,24 +7,28 @@
     "name": "Azazi",
     "email": ""
   },
-  "repository" :
-  { "type" : "git"
-      , "url" : "https://github.com/ase-lab/snapgram.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ase-lab/snapgram.git"
   },
   "dependencies": {
     "express": "3.4.4",
     "jade": "*",
     "stylus": "*",
-	"mysql":"*",
-    "underscore":"*",
-    "crypto":"*",
-	"gm": "*",
+    "mysql": "*",
+    "underscore": "*",
+    "crypto": "*",
+    "gm": "*",
     "chai": "*",
     "mocha": "*",
     "should": "*",
     "zombie": "*",
     "tough-cookie": "*",
-	"request": "*",
-	"async": "*"
+    "request": "*",
+    "async": "*",
+    "cluster": "*",
+    "connect-redis": "~1.4.7",
+    "express-mysql-session": "0.0.10",
+    "cookie-sessions": "0.0.2"
   }
 }
