@@ -5,19 +5,6 @@
 
 var cluster = require('cluster');
 
-// Code to run if we're in the master process
-if (cluster.isMaster) {
-
-    // Count the machine's CPUs
-    var cpuCount = require('os').cpus().length;
-
-    // Create a worker for each CPU
-    for (var i = 0; i < cpuCount; i += 1) {
-        cluster.fork();
-    }
-
-// Code to run if we're in a worker process
-} else {
 	var mysql = require('mysql');
 	var express = require('express');
 	var SessionStore = require('express-mysql-session')
@@ -49,7 +36,7 @@ if (cluster.isMaster) {
 	var app = express();
 	
 	// all environments
-	app.set('port', 8552);
+	app.set('port', 8551);
 	app.set('views', path.join(__dirname, 'views'));
 	app.set('view engine', 'jade');
 	
@@ -117,7 +104,7 @@ if (cluster.isMaster) {
 	    });
 	});
 	
-	app.get('/', appendConn, routes.index);
+	app.get('/', checkAuth, appendConn, routes.index);
 	app.get('/feed', checkAuth, appendConn, routes.index);
 	
 	//app.get('/users/search', checkAuth, appendConn, user.search);
@@ -149,10 +136,23 @@ if (cluster.isMaster) {
 	app.get('/bulk/show', appendConn, bulk.logEverything);
 	
 	
-	http.createServer(app).listen(app.get('port'), function(){
+
+    // Code to run if we're in the master process
+if (cluster.isMaster) {
+
+    // Count the machine's CPUs
+    var cpuCount = require('os').cpus().length;
+
+    // Create a worker for each CPU
+    for (var i = 0; i < cpuCount; i += 1) {
+        cluster.fork();
+    }
+
+// Code to run if we're in a worker process
+} else {
+    	http.createServer(app).listen(app.get('port'), function(){
 	  console.log('Express server listening on port ' + app.get('port'));
 	});
-
 }
 
 function sendInternalServerError(req, res){

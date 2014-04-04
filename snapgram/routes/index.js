@@ -3,14 +3,16 @@
  * GET home page.
  */
 
-exports.index = function(req, res){      
-		console.log(res.req.session);
+exports.index = function(req, res){
+        var st = new Date();      
+		//console.log(res.req.session);
             if(req.session.loggedin != "" && req.session.loggedin != undefined){
-                req.conn.query("SELECT * FROM Streams a, Users c, Photos b WHERE a.stream_id = '" + req.myuid + "' AND a.photo_id = b.photo_id AND c.user_id = '" + req.myuid + "'", function (err, results, fields){
+                req.conn.query("SELECT * FROM Streams a, Users c, Photos b WHERE a.stream_id = '" + req.session.userid + "' AND a.photo_id = b.photo_id AND c.user_id = '" + req.session.userid + "' LIMIT 0,30", function (err, results, fields){
                     if(err){
                         sendInternalServerError(req, res);
                     }
                     else{
+                        console.log('Feed Page Time: ', new Date() - st, ' ms');
                         res.status(200);
                         res.render('index', {
                             title: 'Welcome to Snapgram',
@@ -19,7 +21,7 @@ exports.index = function(req, res){
                             user_name: res.req.session.loggedin,
                             stream: results,
                             page: req.query.page,
-                            myuid: req.myuid
+                            myuid: req.myuid                            
                         });
                     }
                 });

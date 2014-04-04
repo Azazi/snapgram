@@ -37,14 +37,14 @@ exports.addPhotoToTable = function(req, res, next){
         if(ext === 'jpg' || ext === 'jpeg' || ext === 'gif' || ext === 'bmp' || ext === 'png'){
             req.upload_time = (new Date()/1);
             var shared = 'no';
-            req.conn.query("INSERT INTO Photos (time_stamp, owner_id, owner_name, original_owner, original_owner_name, caption, shared) VALUES ('" + req.upload_time + "', '" + req.user_id + "', '" + req.name + "', '" + req.user_id + "', '" + req.name + "', '" + req.body.title + "', '" + shared + "')", function (err, results, fields){
+            req.conn.query("INSERT INTO Photos (time_stamp, owner_id, owner_name, original_owner, original_owner_name, caption, shared) VALUES ('" + req.upload_time + "', '" + req.session.userid + "', '" + req.name + "', '" + req.session.userid + "', '" + req.name + "', '" + req.body.title + "', '" + shared + "')", function (err, results, fields){
                 if(err){
                     sendInternalServerError(req, res);
                 }
                 else{
-                    console.log(results);
+                    //console.log(results);
                     console.log("successfully added photo to Photos TABLE");
-                    req.photo_id = results[0].insertId;
+                    req.photo_id = results.insertId;
                     req.storeImageTime = new Date() - req.storeImageStartDate;
                     next();
                 }
@@ -115,12 +115,12 @@ exports.insertPhotoPathToTable = function(req, res, next){
     var nameArray = req.files.image.name.split('.');
     var ext = nameArray[nameArray.length - 1];
     req.photo_path = req.photo_id + "." + ext;
-    req.conn.query("UPDATE Photos SET photo_path = '" + req.photo_path + "' WHERE time_stamp = '" + req.upload_time + "' AND owner_id = '" + req.user_id + "'", function (err, results, fields){
+    req.conn.query("UPDATE Photos SET photo_path = '" + req.photo_path + "' WHERE time_stamp = '" + req.upload_time + "' AND owner_id = '" + req.session.userid + "'", function (err, results, fields){
         if(err){
             sendInternalServerError(req, res);
         }
         else{
-            console.log("path is: " + req.photo_path);
+            //console.log("path is: " + req.photo_path);
             console.log("end of insertPhotoToTable");
             req.addToDBTime = new Date() - req.addToDBStartDate;
             next();
@@ -130,7 +130,7 @@ exports.insertPhotoPathToTable = function(req, res, next){
 
 exports.populateStreamTable = function(req, res, next){
     req.addToStreamsStartDate = new Date();
-    req.conn.query("INSERT INTO Streams (stream_id, photo_id) SELECT follower_id, '" + req.photo_id + "' FROM Follows WHERE followee_id = '" + req.user_id + "'", function (err, results, fields){
+    req.conn.query("INSERT INTO Streams (stream_id, photo_id) SELECT follower_id, '" + req.photo_id + "' FROM Follows WHERE followee_id = '" + req.session.userid + "'", function (err, results, fields){
         if(err){
             sendInternalServerError(req, res);
         }
@@ -170,18 +170,18 @@ exports.populateStreamTableShared = function(req, res, next){
 //app.post('/photos/create', photo.create);
 exports.create = function(req, res){
     //split the url into an array and then get the last chunk and render it out in the send req.
-    console.log(req.files.image.path);
+    //console.log(req.files.image.path);
     var pathArray = req.files.image.path.split( '\/' );
-    console.log(pathArray);
+    //console.log(pathArray);
     fs.rename(req.files.image.path, req.files.image.path.replace(pathArray[pathArray.length-1], req.photo_path));
     res.status(303);
     res.render('upload', {
         title: 'Upload Images',
         logged_in: true,
         error: 'Image uploaded successfully',
-        myuid: req.myuid
+        myuid: req.session.userid
     });
-    console.log('Storage: ',req.storeImageTime, ' ms\tDatabase: ', req.addToDBTime, ' ms\tFollowing: ', req.addToStreamsTime);
+    //console.log('Storage: ',req.storeImageTime, ' ms\tDatabase: ', req.addToDBTime, ' ms\tFollowing: ', req.addToStreamsTime);
 };
 
 //app.get('/photos/:id.:ext', photo.show);
@@ -244,6 +244,7 @@ exports.show = function(req, res){
 
 //app.get('/photos/thumbnail/:id.:ext', photo.showThumbnail);
 exports.showThumbnail = function(req, res){
+    var st = new Date();
     var id = req.params.id;
     var ext = req.params.ext;
     var img = imageDirectory + id + "." + ext;
@@ -266,7 +267,7 @@ exports.showThumbnail = function(req, res){
         }        
 
         else{
-            var width=1; 
+            var width=1;
             var height=0;
             var ratio = 0;
             gm(img).size(function(err, val) {
@@ -299,6 +300,7 @@ exports.showThumbnail = function(req, res){
                     var piping = stdout.pipe(res);
 
                     piping.on('finish', function(){
+                        console.log('Thumbnail Time: ', new Date() - st, ' ms');
                         res.end();
                     })
                 });
